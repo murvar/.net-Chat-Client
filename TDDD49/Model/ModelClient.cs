@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace TDDD49.Model
 {
-    internal class ModelClient : INotifyPropertyChanged
+    internal class ModelClient /*: INotifyPropertyChanged*/
     {
-        private string ip;
-        public string Ip
+        private string? ip;
+        public string? Ip
         {
             get { return ip; }
             set 
             {
                 System.Diagnostics.Debug.WriteLine(value);
                 ip = value;
-                OnPropertyChanged("Ip");
+                //OnPropertyChanged("Ip");
             }
         }
 
@@ -29,7 +29,7 @@ namespace TDDD49.Model
             {
                 System.Diagnostics.Debug.WriteLine(value);
                 port = value;
-                OnPropertyChanged("Port");
+                //OnPropertyChanged("Port");
             }
         }
 
@@ -42,20 +42,20 @@ namespace TDDD49.Model
             {
                 System.Diagnostics.Debug.WriteLine(value);
                 listeningPort = value;
-                OnPropertyChanged("ListeningPort");
+                //OnPropertyChanged("ListeningPort");
             }
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        //public event PropertyChangedEventHandler? PropertyChanged;
 
-
+        /*
         private void OnPropertyChanged(string propertyName)
         {
             if (propertyName != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
-        }
+        }*/
 
 
 
