@@ -31,3 +31,14 @@ Skapa logik som lyssnar på anslutningar. Detta bör
 köra via en thread. 
 
 
+
+
+
+
+
+1. Skicka inbjudan - anslutning upprättas
+2. Appetera/neka - anslutning fortsätter/upphör
+
+
+
+

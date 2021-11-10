@@ -8,9 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Model\" />
-    <Folder Include="View\" />
-    <Folder Include="ViewModel\" />
+    <Compile Remove="Model\TDP_Listener.cs" />
+    <Compile Remove="ViewModel\Commands\fetch_data_client.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Model\NewFile1.txt" />
+    <None Remove="ViewModel\Commands\fetch_data_client" />
+    <None Remove="ViewModel\Commands\NewFile1.txt" />
+    <None Remove="ViewModel\NewFile1.txt" />
   </ItemGroup>
 
 </Project>

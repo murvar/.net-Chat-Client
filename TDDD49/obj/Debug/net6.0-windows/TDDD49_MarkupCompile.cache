@@ -1,5 +1,5 @@
 ﻿TDDD49
-1.0.0.0
+
 
 winexe
 C#
@@ -12,9 +12,9 @@ TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 D:\TDDD49\TDDD49\App.xaml
 1-487866684
 
-8231821004
+6-1335098539
 194-585100539
 View\MainWindow.xaml;
 
-False
+True
 
