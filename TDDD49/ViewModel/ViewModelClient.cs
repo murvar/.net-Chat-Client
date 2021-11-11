@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TDDD49.Model;
+using TDDD49.ViewModel.Commands;
 
 namespace TDDD49.ViewModels
 {
     public class ViewModelClient : INotifyPropertyChanged
     {
 
+        public SimpleCommand SimpleCommand { get; set; }
         private ModelClient modelClient;
         public string Ip
         {
@@ -59,8 +62,14 @@ namespace TDDD49.ViewModels
         public ViewModelClient()
         {
             modelClient = new ModelClient();
+            this.SimpleCommand = new SimpleCommand(this);
             
         
+        }
+
+        public void SimpleMethod()
+        {
+            Debug.WriteLine("hello");
         }
 
 
