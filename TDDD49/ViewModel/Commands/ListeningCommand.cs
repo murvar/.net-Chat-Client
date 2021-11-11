@@ -8,10 +8,10 @@ using TDDD49.ViewModels;
 
 namespace TDDD49.ViewModel.Commands
 {
-    public class SimpleCommand : ICommand
+    public class ListeningCommand : ICommand
     {
         public ViewModelClient Vmc { get; set; }
-        public SimpleCommand(ViewModelClient vmc)
+        public ListeningCommand(ViewModelClient vmc)
         {
             this.Vmc = vmc;
         }
@@ -24,7 +24,7 @@ namespace TDDD49.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            this.Vmc.SimpleMethod();
+            this.Vmc.ListeningMethod();
         }
     }
 }

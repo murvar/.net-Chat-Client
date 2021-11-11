@@ -1,29 +1,30 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using TDDD49.ViewModels;
 
-namespace TDDD49.ViewModels.commands
+namespace TDDD49.ViewModel.Commands
 {
-    /**
     public class ClientFetchCommand : ICommand
     {
-        public ViewModelClient ViewModel { get; set; }
-
-        public ClientFetchCommand(ViewModelClient viewModel)
+        public ViewModelClient Vmc { get; set; }
+        public ClientFetchCommand(ViewModelClient vmc)
         {
-            
+            this.Vmc = vmc;
         }
-
         public event EventHandler CanExecuteChanged;
 
-        public bool CanExecute(object paramenter)
+        public bool CanExecute(object parameter)
         {
             return true;
-          }
+        }
 
         public void Execute(object parameter)
         {
-            this.ViewModel.SimpleMethod();
+            this.Vmc.ClientFetchMethod();
         }
-    }*/
+    }
 }

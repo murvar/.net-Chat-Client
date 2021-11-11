@@ -18,21 +18,31 @@
 
         <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,0,0"
                     DataContext="{Binding Source={StaticResource vmc}}">
+
+            <Label>Name:</Label>
+            <TextBox x:Name="txtName"
+                     Text="{Binding Path=Name}"/>
+
             <Label>IP-Adress:</Label>
-            <TextBox x:Name="txtIP" 
+            <TextBox x:Name="txtIP"
                      Text="{Binding Path=Ip}"/>
             
             <Label>Port:</Label>
-            <TextBox x:Name="txtPort" 
+            <TextBox x:Name="txtPort"
                      Text="{Binding Path=Port}"/>
             
             <Button x:Name="btnAdd" 
                     Margin="0,5,0,0" 
-                    Command="{Binding SimpleCommand, Source={StaticResource vmc}}">Initiate Chat</Button>
+                    Command="{Binding ClientFetchCommand, Source={StaticResource vmc}}">Initiate Chat</Button>
             
             <Label>Listening Port:</Label>
             <TextBox x:Name="lstenPort" 
                      Text="{Binding Path=ListeningPort}"/>
+
+            <Button x:Name="btnListen" 
+                    Margin="0,5,0,0" 
+                    Command="{Binding ListeningCommand, Source={StaticResource vmc}}">Listen</Button>
+
         </StackPanel>
 
     </Grid>

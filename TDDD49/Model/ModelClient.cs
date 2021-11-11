@@ -9,6 +9,16 @@ namespace TDDD49.Model
 {
     internal class ModelClient /*: INotifyPropertyChanged*/
     {
+        private string name;
+        public string Name
+        {
+            get { return name; }
+            set
+            {
+                name = value;
+            }
+        }
+
         private string? ip;
         public string? Ip
         {
@@ -21,8 +31,8 @@ namespace TDDD49.Model
             }
         }
 
-        private int? port;
-        public int? Port
+        private int port;
+        public int Port
         {
             get { return port; }
             set 
@@ -33,9 +43,9 @@ namespace TDDD49.Model
             }
         }
 
-        private int? listeningPort;
+        private int listeningPort;
 
-        public int? ListeningPort
+        public int ListeningPort
         {
             get { return listeningPort; }
             set
@@ -45,6 +55,7 @@ namespace TDDD49.Model
                 //OnPropertyChanged("ListeningPort");
             }
         }
+
 
         //public event PropertyChangedEventHandler? PropertyChanged;
 
