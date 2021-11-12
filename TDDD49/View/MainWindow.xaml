@@ -39,10 +39,7 @@
             <TextBox x:Name="lstenPort" 
                      Text="{Binding Path=ListeningPort}"/>
 
-            <Button x:Name="btnListen" 
-                    Margin="0,5,0,0" 
-                    Command="{Binding ListeningCommand, Source={StaticResource vmc}}">Listen</Button>
-
+           
         </StackPanel>
 
     </Grid>

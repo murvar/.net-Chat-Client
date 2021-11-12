@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using TDDD49.ViewModels;
 
+
 namespace TDDD49.ViewModel.Commands
 {
-    public class ListeningCommand : ICommand
+    public class DenyConnectionCommand : ICommand
     {
         public ViewModelClient Vmc { get; set; }
-        public ListeningCommand(ViewModelClient vmc)
+        public DenyConnectionCommand(ViewModelClient vmc)
         {
             this.Vmc = vmc;
         }
@@ -24,8 +25,7 @@ namespace TDDD49.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            // this.Vmc.ListeningMethod();
-            
+            this.Vmc.DenyConnectionMethod();
         }
     }
 }

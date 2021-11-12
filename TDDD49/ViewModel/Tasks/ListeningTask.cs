@@ -21,26 +21,26 @@ namespace TDDD49.ViewModel.Tasks
             this.Vmc = vmc;
         }
 
-        public void ListeningTaskMethod(ModelClient modelClient)
+        public void ListeningTaskMethod(ViewModelClient viewModelClient)
         {
             Task.Factory.StartNew(() =>
             {
                 Debug.WriteLine(" ListeningTask has now started!");
                 //while (true)
                 //{
-                ListeningMethod(modelClient);
+                ListeningMethod(viewModelClient);
                 //}
             });
         }
 
-        private void ListeningMethod(ModelClient modelClient)
+        private void ListeningMethod(ViewModelClient viewModelClient)
         {
             TcpListener server = null;
             try
             {
                 //Debug.WriteLine("Running listening");
                 // Set the TcpListener on port 13000.
-                int port = modelClient.ListeningPort;
+                int port = viewModelClient.ListeningPort;
                 IPAddress localAddr = IPAddress.Parse("127.0.0.1");
 
                 // TcpListener server = new TcpListener(port);
@@ -67,6 +67,10 @@ namespace TDDD49.ViewModel.Tasks
 
                     // Get a stream object for reading and writing
                     NetworkStream stream = client.GetStream();
+
+                    //ÖPPNA FÖRNSTRET
+                    //VÄNTA PÅ SVAR PÅ FÖNSTER, KOLLA M VARIABEL
+                    
 
                     int i;
 

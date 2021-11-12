@@ -18,8 +18,12 @@ namespace TDDD49.ViewModels
     {
 
         public ClientFetchCommand ClientFetchCommand { get; set; }
-        //public ListeningCommand ListeningCommand { get; set; }
+        public AcceptConnectionCommand AcceptConnectionCommand { get; set; }
+        public DenyConnectionCommand DenyConnectionCommand { get; set; }
+
         private ListeningTask listeningTask;
+        private ConnectTask connectTask;
+
         private ModelClient modelClient;
 
         public string Name
@@ -84,73 +88,36 @@ namespace TDDD49.ViewModels
             modelClient.Port = 5001;
             modelClient.Name = "Robin";
             modelClient.ListeningPort = 5001;
-            this.ClientFetchCommand = new ClientFetchCommand(this);
-            //this.ListeningCommand = new ListeningCommand(this);
+
             this.listeningTask = new ListeningTask(this);
-            this.listeningTask.ListeningTaskMethod(modelClient);
+            this.connectTask = new ConnectTask(this);
+
+            this.ClientFetchCommand = new ClientFetchCommand(this);
+            this.AcceptConnectionCommand = new AcceptConnectionCommand(this);
+            this.DenyConnectionCommand = new DenyConnectionCommand(this);
+
+            this.listeningTask.ListeningTaskMethod(this);
 
         }
 
         public void ClientFetchMethod()
         {
-            try
-            {
-                //Debug.WriteLine("hellooooooooooooooo");
+            connectTask.ConnectTaskMethod(modelClient);
+        }
 
-                // Create a TcpClient.
-                // Note, for this client to work you need to have a TcpServer
-                // connected to the same address as specified by the server, port
-                // combination.
-                String server = modelClient.Ip;
-                int port = modelClient.Port;
+        public void createConnectionPromptWindow()
+        {
 
-                //IMPLEMENTERA DEFENSIV PROGRAMMERING HÄR
+        }
 
-                TcpClient client = new TcpClient(server, port);
+        public void AcceptConnectionMethod()
+        {
 
-                // Translate the passed message into ASCII and store it as a Byte array.
-                Byte[] data = System.Text.Encoding.ASCII.GetBytes(modelClient.Name);
+        }
 
-                // Get a client stream for reading and writing.
-                //Stream stream = client.GetStream();
+        public void DenyConnectionMethod()
+        {
 
-                NetworkStream stream = client.GetStream();
-
-                // Send the message to the connected TcpServer.
-                stream.Write(data, 0, data.Length);
-
-                Debug.WriteLine("Sent: {0}", modelClient.Name);
-
-                Debug.WriteLine(client.Connected);
-
-                // Receive the TcpServer.response.
-
-                // Buffer to store the response bytes.
-                data = new Byte[256];
-
-                // String to store the response ASCII representation.
-                String responseData = String.Empty;
-
-                // Read the first batch of the TcpServer response bytes.
-                Int32 bytes = stream.Read(data, 0, data.Length);
-                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                Debug.WriteLine("Received: {0}", responseData);
-
-                // Close everything.
-                stream.Close();
-                client.Close();
-            }
-            catch (ArgumentNullException e)
-            {
-                Debug.WriteLine("ArgumentNullException: {0}", e);
-            }
-            catch (SocketException e)
-            {
-                Debug.WriteLine("SocketException: {0}", e);
-            }
-
-            Debug.WriteLine("\n Press Enter to continue...");
-            Console.Read();
         }
 
 
