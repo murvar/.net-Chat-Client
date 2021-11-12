@@ -24,7 +24,8 @@ namespace TDDD49.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            this.Vmc.ListeningMethod();
+            // this.Vmc.ListeningMethod();
+            
         }
     }
 }
