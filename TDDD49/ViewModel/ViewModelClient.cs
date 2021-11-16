@@ -26,6 +26,18 @@ namespace TDDD49.ViewModels
 
         private ModelClient modelClient;
 
+        private bool popUpActive;
+
+        public bool PopUpActive
+        {
+            get { return popUpActive; }
+            set { 
+                popUpActive = value;
+                OnPropertyChanged("PopUpActive");
+            }
+        }
+
+
         public string Name
         {
             get { return modelClient.Name; }

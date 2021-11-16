@@ -39,8 +39,45 @@
             <TextBox x:Name="lstenPort" 
                      Text="{Binding Path=ListeningPort}"/>
 
-           
+    
+            <Popup IsOpen = "{Binding Path = PopUpActive}"   
+                 PlacementTarget = "{Binding ElementName = lstenPort}" 
+                 AllowsTransparency = "True" PopupAnimation = "Slide">
+            
+
+                <Grid Margin="10">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.Resources>
+                        <vm:ViewModelClient x:Key="vmc"/>
+                    </Grid.Resources>
+
+                    <Label Grid.Row="0" Grid.Column="0">Incoming connection</Label>
+                    <Button x:Name="btnAcceptConnection" 
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        Margin="0,0,0,0" Command="{Binding AcceptConnectionCommand, Source={StaticResource vmc}}" >Accept</Button>
+                    <Button x:Name="btnDenyConnection"
+                        Grid.Column="0"
+                        Grid.Row="2"
+                        Margin="0,0,0,0" Command="{Binding DenyConnectionCommand, Source={StaticResource vmc}}" >Deny</Button>
+                </Grid>
+
+            </Popup>
+
+
         </StackPanel>
+
+        
 
     </Grid>
 

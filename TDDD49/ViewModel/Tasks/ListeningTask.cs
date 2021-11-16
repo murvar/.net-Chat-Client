@@ -70,7 +70,7 @@ namespace TDDD49.ViewModel.Tasks
 
                     //ÖPPNA FÖRNSTRET
                     //VÄNTA PÅ SVAR PÅ FÖNSTER, KOLLA M VARIABEL
-                    
+                    Vmc.PopUpActive = true;
 
                     int i;
 
@@ -92,6 +92,7 @@ namespace TDDD49.ViewModel.Tasks
                     }
 
                     // Shutdown and end connection
+
                     client.Close();
                 }
             }
