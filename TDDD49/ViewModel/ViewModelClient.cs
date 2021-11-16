@@ -80,6 +80,7 @@ namespace TDDD49.ViewModels
                 System.Diagnostics.Debug.WriteLine(value);
                 //listeningPort = value;
                 OnPropertyChanged("ListeningPort");
+                listeningTask.CancelListeningTask();
             }
         }
 
@@ -124,12 +125,12 @@ namespace TDDD49.ViewModels
 
         public void AcceptConnectionMethod()
         {
-
+            //modelClient.Answer = true;
         }
 
         public void DenyConnectionMethod()
         {
-
+            //modelClient.Answer = false;
         }
 
 
