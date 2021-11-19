@@ -34,8 +34,8 @@ namespace TDDD49.ViewModel.Tasks
         public ListeningTask(ViewModelClient vmc)
         {
             this.Vmc = vmc;
-            //this.TokenSource = new CancellationTokenSource();
-            //this.CancelToken = TokenSource.Token;
+            this.TokenSource = new CancellationTokenSource();
+            this.CancelToken = TokenSource.Token;
             //this.Answer = null;
         }
 
@@ -48,23 +48,10 @@ namespace TDDD49.ViewModel.Tasks
 
         public void ListeningTaskMethod(ViewModelClient viewModelClient)
         {
-            Task.Factory.StartNew(async () =>
+
+            Task.Factory.StartNew(() =>
             {
-                while (true)
-                {
-                    this.TokenSource = new CancellationTokenSource();
-                    this.CancelToken = TokenSource.Token;
-
-                    Task t = Task.Factory.StartNew(() =>
-                    {
-                        ListeningMethod(viewModelClient);
-                    });
-
-                    t.Wait();
-                   
-
-                    
-                }
+                ListeningMethod(viewModelClient);
 
             });
 
@@ -73,7 +60,7 @@ namespace TDDD49.ViewModel.Tasks
 
         private void ListeningMethod(ViewModelClient viewModelClient)
         {
-            
+            Debug.WriteLine("LISTENING");
             TcpListener server = null;
             try
             {
