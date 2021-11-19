@@ -49,14 +49,14 @@ namespace TDDD49.ViewModel.Tasks
         public void ListeningTaskMethod(ViewModelClient viewModelClient)
         {
 
-            Task.Factory.StartNew(() =>
+            Task t = Task.Factory.StartNew(() =>
             {
                 ListeningMethod(viewModelClient);
 
             });
 
-
         }
+
 
         private void ListeningMethod(ViewModelClient viewModelClient)
         {
@@ -79,6 +79,10 @@ namespace TDDD49.ViewModel.Tasks
                 Byte[] bytes = new Byte[256];
                 String data = null;
 
+
+                // Create the listener.
+
+
                 // Enter the listening loop.
                 while (true)
                 {
@@ -88,7 +92,7 @@ namespace TDDD49.ViewModel.Tasks
                     // You could also use server.AcceptSocket() here.
                     if (!server.Pending())
                     {
-                        //Debug.WriteLine("No connection!");
+                        Debug.WriteLine("No connection!");
                         //Funktinalitet för att kolla om vi har canclat
                         CancelToken.ThrowIfCancellationRequested();
 
