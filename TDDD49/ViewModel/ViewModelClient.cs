@@ -18,8 +18,10 @@ namespace TDDD49.ViewModels
     {
 
         public ClientFetchCommand ClientFetchCommand { get; set; }
+        public ClientListenCommand ClientListenCommand { get; set; }
         public AcceptConnectionCommand AcceptConnectionCommand { get; set; }
         public DenyConnectionCommand DenyConnectionCommand { get; set; }
+
 
         private ListeningTask listeningTask;
         private ConnectTask connectTask;
@@ -80,7 +82,6 @@ namespace TDDD49.ViewModels
                 System.Diagnostics.Debug.WriteLine(value);
                 //listeningPort = value;
                 OnPropertyChanged("ListeningPort");
-                listeningTask.CancelListeningTask();
             }
         }
 
@@ -94,6 +95,8 @@ namespace TDDD49.ViewModels
             }
         }
 
+        
+
         public ViewModelClient()
         {
             modelClient = new ModelClient();
@@ -106,16 +109,20 @@ namespace TDDD49.ViewModels
             this.connectTask = new ConnectTask(this);
 
             this.ClientFetchCommand = new ClientFetchCommand(this);
+            this.ClientListenCommand = new ClientListenCommand(this);
             this.AcceptConnectionCommand = new AcceptConnectionCommand(this);
             this.DenyConnectionCommand = new DenyConnectionCommand(this);
-
-            this.listeningTask.ListeningTaskMethod(this);
 
         }
 
         public void ClientFetchMethod()
         {
             connectTask.ConnectTaskMethod(modelClient);
+        }
+
+        public void ClientListenMethod()
+        {
+            listeningTask.ListeningTaskMethod(ListeningPort);
         }
 
         public void createConnectionPromptWindow()

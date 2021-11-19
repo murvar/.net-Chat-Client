@@ -25,7 +25,7 @@ namespace TDDD49.ViewModel.Tasks
         {
             Task.Factory.StartNew(() =>
             {
-                Debug.WriteLine(" ListeningTask has now started!");
+                Debug.WriteLine(" ConnectTask has now started!");
                 ConnectMethod(modelClient);
             });
         }

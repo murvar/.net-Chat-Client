@@ -36,12 +36,16 @@
                     Command="{Binding ClientFetchCommand, Source={StaticResource vmc}}">Initiate Chat</Button>
             
             <Label>Listening Port:</Label>
-            <TextBox x:Name="lstenPort" 
-                     Text="{Binding Path=ListeningPort}"/>
+            <TextBox x:Name="listenPort" 
+                     Text="{Binding Path=ListeningPort, Mode=TwoWay}"/>
+
+            <Button x:Name="btnListen" 
+                    Margin="0,5,0,0" 
+                    Command="{Binding ClientListenCommand, Source={StaticResource vmc}}">Start listening</Button>
 
     
             <Popup IsOpen = "{Binding Path = PopUpActive}"   
-                 PlacementTarget = "{Binding ElementName = lstenPort}" 
+                 PlacementTarget = "{Binding ElementName = listenPort}" 
                  AllowsTransparency = "True" PopupAnimation = "Slide">
             
 

@@ -34,9 +34,13 @@ namespace TDDD49.ViewModel.Tasks
         public ListeningTask(ViewModelClient vmc)
         {
             this.Vmc = vmc;
+            createNewToken();
+        }
+
+        public void createNewToken()
+        {
             this.TokenSource = new CancellationTokenSource();
             this.CancelToken = TokenSource.Token;
-            //this.Answer = null;
         }
 
         public void CancelListeningTask()
@@ -46,27 +50,27 @@ namespace TDDD49.ViewModel.Tasks
         }
 
 
-        public void ListeningTaskMethod(ViewModelClient viewModelClient)
+        public void ListeningTaskMethod(int port)
         {
 
-            Task t = Task.Factory.StartNew(() =>
+            Task.Factory.StartNew(() =>
             {
-                ListeningMethod(viewModelClient);
+                ListeningMethod(port);
 
             });
 
         }
 
-
-        private void ListeningMethod(ViewModelClient viewModelClient)
+        private void ListeningMethod(int portListen)
         {
             Debug.WriteLine("LISTENING");
+            Debug.WriteLine("WITH PORT " + portListen);
             TcpListener server = null;
             try
             {
                 //Debug.WriteLine("Running listening");
                 // Set the TcpListener on port 13000.
-                int port = viewModelClient.ListeningPort;
+                int port = portListen;
                 IPAddress localAddr = IPAddress.Parse("127.0.0.1");
 
                 // TcpListener server = new TcpListener(port);
@@ -92,7 +96,8 @@ namespace TDDD49.ViewModel.Tasks
                     // You could also use server.AcceptSocket() here.
                     if (!server.Pending())
                     {
-                        Debug.WriteLine("No connection!");
+
+                        //Debug.WriteLine("No connection!");
                         //Funktinalitet för att kolla om vi har canclat
                         CancelToken.ThrowIfCancellationRequested();
 
