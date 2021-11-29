@@ -132,12 +132,13 @@ namespace TDDD49.ViewModels
 
         public void AcceptConnectionMethod()
         {
-            //modelClient.Answer = true;
+            listeningTask.AcceptConnection();
+
         }
 
         public void DenyConnectionMethod()
         {
-            //modelClient.Answer = false;
+            listeningTask.DenyConnection();
         }
 
 
