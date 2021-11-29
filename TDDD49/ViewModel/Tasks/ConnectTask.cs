@@ -33,6 +33,8 @@ namespace TDDD49.ViewModel.Tasks
         {
             try
             {
+                Vmc.InformativeConnectBoxActive = false;
+                //göm fönser med felmeddelande
                 //Debug.WriteLine("hellooooooooooooooo");
 
                 // Create a TcpClient.
@@ -45,7 +47,7 @@ namespace TDDD49.ViewModel.Tasks
                 //IMPLEMENTERA DEFENSIV PROGRAMMERING HÄR
 
                 TcpClient client = new TcpClient(server, port);
-              
+
                 // Translate the passed message into ASCII and store it as a Byte array.
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(modelClient.Name);
 
@@ -90,6 +92,8 @@ namespace TDDD49.ViewModel.Tasks
             }
             catch (SocketException e)
             {
+                //visa fönser med felmeddelande
+                Vmc.InformativeConnectBoxActive = true;
                 Debug.WriteLine("SocketException: {0}", e);
             }
 

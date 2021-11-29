@@ -29,7 +29,6 @@ namespace TDDD49.ViewModels
         private ModelClient modelClient;
 
         private bool popUpActive;
-
         public bool PopUpActive
         {
             get { return popUpActive; }
@@ -37,6 +36,24 @@ namespace TDDD49.ViewModels
                 popUpActive = value;
                 OnPropertyChanged("PopUpActive");
             }
+        }
+
+        private bool informativeConnectBoxActive;
+        public bool InformativeConnectBoxActive
+        {
+            get { return informativeConnectBoxActive; }
+            set
+            {
+                informativeConnectBoxActive = value;
+                OnPropertyChanged("InformativeConnectBoxActive");
+            }
+        }
+
+        private String informativeConnectBoxMsg;
+        public String InformativeConnectBoxMsg
+        {
+            get { return informativeConnectBoxMsg;}
+            set { informativeConnectBoxMsg = value;}    
         }
 
 
@@ -104,6 +121,7 @@ namespace TDDD49.ViewModels
             modelClient.Port = 5001;
             modelClient.Name = "Robin";
             modelClient.ListeningPort = 5001;
+            this.InformativeConnectBoxActive = false;
 
             this.listeningTask = new ListeningTask(this);
             this.connectTask = new ConnectTask(this);
@@ -112,6 +130,8 @@ namespace TDDD49.ViewModels
             this.ClientListenCommand = new ClientListenCommand(this);
             this.AcceptConnectionCommand = new AcceptConnectionCommand(this);
             this.DenyConnectionCommand = new DenyConnectionCommand(this);
+
+
 
         }
 

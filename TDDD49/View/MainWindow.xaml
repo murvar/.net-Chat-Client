@@ -11,6 +11,7 @@
 
         <Grid.Resources>
             <vm:ViewModelClient x:Key="vmc"/>
+            <BooleanToVisibilityConverter x:Key="TrueToVisibleConverter"/>
         </Grid.Resources>
 
         <Label>Contacts</Label>
@@ -34,7 +35,10 @@
             <Button x:Name="btnAdd" 
                     Margin="0,5,0,0" 
                     Command="{Binding ClientFetchCommand, Source={StaticResource vmc}}">Initiate Chat</Button>
-            
+
+            <Label Grid.Row="0" Grid.Column="0" Visibility="{Binding Path=InformativeConnectBoxActive, Converter={StaticResource TrueToVisibleConverter}}">No connection was found!</Label>
+ 
+
             <Label>Listening Port:</Label>
             <TextBox x:Name="listenPort" 
                      Text="{Binding Path=ListeningPort, Mode=TwoWay}"/>
