@@ -9,6 +9,14 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid Margin="10">
 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
         <Grid.Resources>
             <vm:ViewModelClient x:Key="vmc"/>
             <BooleanToVisibilityConverter x:Key="TrueToVisibleConverter"/>
@@ -17,7 +25,7 @@
         <Label>Contacts</Label>
         <ListBox Grid.Row="1" x:Name="lstNames" />
 
-        <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,0,0"
+        <StackPanel Grid.Row="1" Grid.Column="0" Margin="5,0,0,0"
                     DataContext="{Binding Source={StaticResource vmc}}">
 
             <Label>Name:</Label>
@@ -37,6 +45,8 @@
                     Command="{Binding ClientFetchCommand, Source={StaticResource vmc}}">Initiate Chat</Button>
 
             <Label Grid.Row="0" Grid.Column="0" Visibility="{Binding Path=InformativeConnectBoxActive, Converter={StaticResource TrueToVisibleConverter}}">No connection was found!</Label>
+
+         
  
 
             <Label>Listening Port:</Label>
@@ -84,6 +94,8 @@
 
 
         </StackPanel>
+
+        <Label Grid.Column="1" Content="{Binding ShowConnectionStatusMsg, Source={StaticResource vmc}}"></Label>
 
         
 

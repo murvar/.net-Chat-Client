@@ -56,6 +56,18 @@ namespace TDDD49.ViewModels
             set { informativeConnectBoxMsg = value;}    
         }
 
+        private String showConnectionStatusMsg;
+        public String ShowConnectionStatusMsg
+        {
+            get { return showConnectionStatusMsg; }
+            set 
+            { 
+                showConnectionStatusMsg = value;
+                OnPropertyChanged("ShowConnectionStatusMsg");
+            }
+        }
+
+
 
         public string Name
         {
@@ -122,6 +134,7 @@ namespace TDDD49.ViewModels
             modelClient.Name = "Robin";
             modelClient.ListeningPort = 5001;
             this.InformativeConnectBoxActive = false;
+            this.ShowConnectionStatusMsg = "No connection";
 
             this.listeningTask = new ListeningTask(this);
             this.connectTask = new ConnectTask(this);

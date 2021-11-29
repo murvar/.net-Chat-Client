@@ -96,35 +96,62 @@ namespace TDDD49.ViewModel.Tasks
 
         public void AcceptConnection()
         {
-
-            // Buffer for reading data
-            Byte[] bytes = new Byte[256];
-            String data = null;
-
-            // Get a stream object for reading and writing
-            if (!client.Any()) {
-                throw new Exception("fel");
-            }
-            NetworkStream stream = client[0].GetStream();
-            int i;
-            //while Answer {}
-            // Loop to receive all the data sent by the client.
-            while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
+            Task.Factory.StartNew(() =>
             {
-                // Translate data bytes to a ASCII string.
-                data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                //Debug.WriteLine("Received: {0}", data);
 
-                // Process the data sent by the client.
-                data = data.ToUpper();
+                try
+                {
+                    Debug.WriteLine("HERE");
+                    Vmc.PopUpActive = false;
+                    Vmc.ShowConnectionStatusMsg = "Connected";
+                    // Buffer for reading data
+                    Byte[] bytes = new Byte[256];
+                    String data = null;
 
-                byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+                    // Get a stream object for reading and writing
+                    if (!client.Any())
+                    {
+                        throw new Exception("fel");
+                    }
+                    NetworkStream stream = client[0].GetStream();
+                    int i;
+                    //while Answer {}
+                    // Loop to receive all the data sent by the client.
+                    while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
+                    {
+                        // Translate data bytes to a ASCII string.
+                        data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+                        //Debug.WriteLine("Received: {0}", data);
 
-                // Send back a response.
-                stream.Write(msg, 0, msg.Length);
-                //Debug.WriteLine("Sent: {0}", data);
-            }
-            CloseClient();
+                        // Process the data sent by the client.
+                        data = data.ToUpper();
+
+                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+
+                        // Send back a response.
+                        stream.Write(msg, 0, msg.Length);
+                        //Debug.WriteLine("Sent: {0}", data);
+                        Debug.WriteLine("HERE2");
+                        break;
+                    } 
+                    while (true)
+                    {
+                        Debug.WriteLine("HERE3");
+                        break;
+                    }
+                } 
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
+                }
+                finally
+                {
+                    Debug.WriteLine("HERE4");
+                    Vmc.ShowConnectionStatusMsg = "Finished";
+                    CloseClient();
+                }
+               
+            }); 
         }
 
         public void DenyConnection()

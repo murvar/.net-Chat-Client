@@ -47,6 +47,7 @@ namespace TDDD49.ViewModel.Tasks
                 //IMPLEMENTERA DEFENSIV PROGRAMMERING HÄR
 
                 TcpClient client = new TcpClient(server, port);
+                Vmc.ShowConnectionStatusMsg = "Connected";
 
                 // Translate the passed message into ASCII and store it as a Byte array.
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(modelClient.Name);
@@ -63,28 +64,29 @@ namespace TDDD49.ViewModel.Tasks
 
                 Debug.WriteLine(client.Connected);
 
-                //Implementera abnryta connection knapp här
-                //while (true)
-                //{
+                while (true)
+                {
+                    
 
-                // Receive the TcpServer.response.
+                    //Implementera abnryta connection knapp här
 
-                // Buffer to store the response bytes.
-                data = new Byte[256];
+                    // Receive the TcpServer.response.
 
-                // String to store the response ASCII representation.
-                String responseData = String.Empty;
+                    // Buffer to store the response bytes.
+                    data = new Byte[256];
 
-                // Read the first batch of the TcpServer response bytes.
-                Int32 bytes = stream.Read(data, 0, data.Length);
-                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                Debug.WriteLine("Received: {0}", responseData);
+                    // String to store the response ASCII representation.
+                    String responseData = String.Empty;
 
-                // Close everything.
-                   
-                //}
+                    // Read the first batch of the TcpServer response bytes.
+                    Int32 bytes = stream.Read(data, 0, data.Length);
+                    responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                    Debug.WriteLine("Received: {0}", responseData);
+
+                }
                 stream.Close();
                 client.Close();
+
             }
             catch (ArgumentNullException e)
             {
