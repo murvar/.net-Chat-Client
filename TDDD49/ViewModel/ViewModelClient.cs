@@ -165,6 +165,10 @@ namespace TDDD49.ViewModels
 
         public void AcceptConnectionMethod()
         {
+
+            this.PopUpActive = false;
+            this.ShowConnectionStatusMsg = "Connected";
+            Debug.WriteLine(PopUpActive);
             listeningTask.AcceptConnection();
 
         }
@@ -173,6 +177,7 @@ namespace TDDD49.ViewModels
         {
             listeningTask.DenyConnection();
         }
+
 
 
     }

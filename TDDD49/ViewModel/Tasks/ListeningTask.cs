@@ -65,31 +65,31 @@ namespace TDDD49.ViewModel.Tasks
 
                 // Start listening for client requests.
                 Server.Start();
+                
 
                 // Enter the listening loop.
-                while (true)
-                {
-                    var something = await Server.AcceptTcpClientAsync();
 
-                    client.Add(something);
-                    
-                    Debug.WriteLine("Connected!");
-                    Vmc.PopUpActive = true;
+                var something = await Server.AcceptTcpClientAsync();
 
-                }
+                client.Add(something);
+                Vmc.PopUpActive = true;
+
+                Debug.WriteLine("Connected!");
+
+
 
             }
             catch (SocketException e)
             {
                 Debug.WriteLine("SocketException: {0}", e);
-            }
+            }/**
             finally
             {
                 // Stop listening for new clients.
                 // Debug.WriteLine("server stopping");
                 // server.Stop();
             }
-
+            */
             //Debug.WriteLine("\nHit enter to continue...");
             //Console.Read();
         }
@@ -102,8 +102,7 @@ namespace TDDD49.ViewModel.Tasks
                 try
                 {
                     Debug.WriteLine("HERE");
-                    Vmc.PopUpActive = false;
-                    Vmc.ShowConnectionStatusMsg = "Connected";
+                    Debug.WriteLine(client.Count);
                     // Buffer for reading data
                     Byte[] bytes = new Byte[256];
                     String data = null;

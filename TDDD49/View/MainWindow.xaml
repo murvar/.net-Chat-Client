@@ -25,7 +25,7 @@
         <Label>Contacts</Label>
         <ListBox Grid.Row="1" x:Name="lstNames" />
 
-        <StackPanel Grid.Row="1" Grid.Column="0" Margin="5,0,0,0"
+        <StackPanel Grid.Row="1" Grid.Column="0" Margin="5,0,5,0"
                     DataContext="{Binding Source={StaticResource vmc}}">
 
             <Label>Name:</Label>
@@ -58,9 +58,12 @@
                     Command="{Binding ClientListenCommand, Source={StaticResource vmc}}">Start listening</Button>
 
     
-            <Popup IsOpen = "{Binding Path = PopUpActive}"   
-                 PlacementTarget = "{Binding ElementName = listenPort}" 
-                 AllowsTransparency = "True" PopupAnimation = "Slide">
+            <Popup IsOpen = "{Binding PopUpActive, Source={StaticResource vmc}, Mode=TwoWay}"   
+                   PlacementTarget = "{Binding ElementName = btnListen}" 
+                   AllowsTransparency = "True" PopupAnimation = "Slide"
+                   StaysOpen="{Binding PopUpActive, Source={StaticResource vmc}, Mode=TwoWay}" 
+                   Visibility="{Binding PopUpActive, Source={StaticResource vmc}, Converter={StaticResource TrueToVisibleConverter}, Mode=TwoWay}"
+                    >
             
 
                 <Grid Margin="10">
@@ -94,10 +97,13 @@
 
 
         </StackPanel>
-
-        <Label Grid.Column="1" Content="{Binding ShowConnectionStatusMsg, Source={StaticResource vmc}}"></Label>
-
         
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,0,0"
+                    DataContext="{Binding Source={StaticResource vmc}}">
+        <Label Grid.Column="1" Content="{Binding ShowConnectionStatusMsg, Source={StaticResource vmc}}"></Label>
+        
+
+        </StackPanel>
 
     </Grid>
 

@@ -81,7 +81,7 @@ namespace TDDD49.ViewModel.Tasks
                     // Read the first batch of the TcpServer response bytes.
                     Int32 bytes = stream.Read(data, 0, data.Length);
                     responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                    Debug.WriteLine("Received: {0}", responseData);
+                    //Debug.WriteLine("Received: {0}", responseData);
 
                 }
                 stream.Close();
