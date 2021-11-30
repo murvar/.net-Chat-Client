@@ -134,6 +134,7 @@ namespace TDDD49.ViewModels
             modelClient.Name = "Robin";
             modelClient.ListeningPort = 5001;
             this.InformativeConnectBoxActive = false;
+            this.PopUpActive = true;
             this.ShowConnectionStatusMsg = "No connection";
 
             this.listeningTask = new ListeningTask(this);
@@ -175,7 +176,7 @@ namespace TDDD49.ViewModels
 
         public void DenyConnectionMethod()
         {
-            listeningTask.DenyConnection();
+            //listeningTask.DenyConnection();
         }
 
 

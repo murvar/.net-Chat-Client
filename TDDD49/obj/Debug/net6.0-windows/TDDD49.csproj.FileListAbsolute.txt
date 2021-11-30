@@ -20,5 +20,3 @@ D:\TDDD49\TDDD49\obj\Debug\net6.0-windows\TDDD49.genruntimeconfig.cache
 D:\TDDD49\TDDD49\obj\Debug\net6.0-windows\View\MainWindow.g.cs
 D:\TDDD49\TDDD49\obj\Debug\net6.0-windows\View\MainWindow.baml
 D:\TDDD49\TDDD49\obj\Debug\net6.0-windows\TDDD49.csproj.AssemblyReference.cache
-D:\TDDD49\TDDD49\obj\Debug\net6.0-windows\View\ConnectionPrompt.g.cs
-D:\TDDD49\TDDD49\obj\Debug\net6.0-windows\View\ConnectionPrompt.baml

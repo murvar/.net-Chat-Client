@@ -58,7 +58,7 @@
                     Command="{Binding ClientListenCommand, Source={StaticResource vmc}}">Start listening</Button>
 
     
-            <Popup IsOpen = "{Binding PopUpActive, Source={StaticResource vmc}, Mode=TwoWay}"   
+            <Popup IsOpen = "{Binding Path=PopUpActive, Source={StaticResource vmc}, Mode=TwoWay}"   
                    PlacementTarget = "{Binding ElementName = btnListen}" 
                    AllowsTransparency = "True" PopupAnimation = "Slide"
                    StaysOpen="{Binding PopUpActive, Source={StaticResource vmc}, Mode=TwoWay}" 
@@ -101,7 +101,9 @@
         <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,0,0"
                     DataContext="{Binding Source={StaticResource vmc}}">
         <Label Grid.Column="1" Content="{Binding ShowConnectionStatusMsg, Source={StaticResource vmc}}"></Label>
-        
+
+
+
 
         </StackPanel>
 
