@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
+using System.Windows;
 
 namespace TDDD49.ViewModel.Tasks
 {
@@ -72,7 +73,12 @@ namespace TDDD49.ViewModel.Tasks
                 var something = await Server.AcceptTcpClientAsync();
 
                 client.Add(something);
-                Vmc.PopUpActive = true;
+                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    Vmc.PopUpActive = true;
+                    Vmc.ShowConnectionStatusMsg = "Not Connected";
+                }));
+               
 
                 Debug.WriteLine("Connected!");
 

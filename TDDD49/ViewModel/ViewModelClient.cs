@@ -11,6 +11,7 @@ using TDDD49.ViewModel.Tasks;
 using System.Net.Sockets;
 using System.Net;
 using System.IO;
+using System.Windows;
 
 namespace TDDD49.ViewModels
 {
@@ -134,7 +135,7 @@ namespace TDDD49.ViewModels
             modelClient.Name = "Robin";
             modelClient.ListeningPort = 5001;
             this.InformativeConnectBoxActive = false;
-            this.PopUpActive = true;
+            this.PopUpActive = false;
             this.ShowConnectionStatusMsg = "No connection";
 
             this.listeningTask = new ListeningTask(this);
@@ -166,9 +167,10 @@ namespace TDDD49.ViewModels
 
         public void AcceptConnectionMethod()
         {
-
-            this.PopUpActive = false;
-            this.ShowConnectionStatusMsg = "Connected";
+            
+            PopUpActive = false;
+            ShowConnectionStatusMsg = "Connected";
+            
             Debug.WriteLine(PopUpActive);
             //listeningTask.AcceptConnection();
 

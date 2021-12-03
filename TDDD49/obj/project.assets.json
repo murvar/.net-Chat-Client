@@ -8,19 +8,19 @@
     "net6.0-windows7.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Robin\\.nuget\\packages\\": {}
+    "C:\\Users\\Vincent\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\TDDD49\\TDDD49\\TDDD49.csproj",
+      "projectUniqueName": "C:\\Users\\Vincent\\Documents\\GitHub\\tddd49\\TDDD49\\TDDD49.csproj",
       "projectName": "TDDD49",
-      "projectPath": "D:\\TDDD49\\TDDD49\\TDDD49.csproj",
-      "packagesPath": "C:\\Users\\Robin\\.nuget\\packages\\",
-      "outputPath": "D:\\TDDD49\\TDDD49\\obj\\",
+      "projectPath": "C:\\Users\\Vincent\\Documents\\GitHub\\tddd49\\TDDD49\\TDDD49.csproj",
+      "packagesPath": "C:\\Users\\Vincent\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Vincent\\Documents\\GitHub\\tddd49\\TDDD49\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Robin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Vincent\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
