@@ -73,12 +73,14 @@ namespace TDDD49.ViewModel.Tasks
                 var something = await Server.AcceptTcpClientAsync();
 
                 client.Add(something);
+                Vmc.PopUpActive = true;
+                /**
                 Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    Vmc.PopUpActive = true;
+                Vmc.PopUpActive = true;
                     Vmc.ShowConnectionStatusMsg = "Not Connected";
                 }));
-               
+               */
 
                 Debug.WriteLine("Connected!");
 
@@ -120,8 +122,10 @@ namespace TDDD49.ViewModel.Tasks
                     }
                     NetworkStream stream = client[0].GetStream();
                     int i;
+
                     //while Answer {}
                     // Loop to receive all the data sent by the client.
+                    /**
                     while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
                     {
                         // Translate data bytes to a ASCII string.
@@ -134,29 +138,29 @@ namespace TDDD49.ViewModel.Tasks
                         byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
 
                         // Send back a response.
-                        stream.Write(msg, 0, msg.Length);
-                        //Debug.WriteLine("Sent: {0}", data);
-                        Debug.WriteLine("HERE2");
+                        //stream.Write(msg, 0, msg.Length);
+                        
                         break;
-                    } 
-                    while (true)
-                    {
-                        Debug.WriteLine("HERE3");
-                        break;
-                    }
+                    }*/
+                    Debug.WriteLine("WE are connected");
                 } 
                 catch (Exception e)
                 {
                     Debug.WriteLine(e);
-                }
+                }/*
                 finally
                 {
                     Debug.WriteLine("HERE4");
-                    Vmc.ShowConnectionStatusMsg = "Finished";
+                    Vmc.ShowConnectionStatusMsg = "No connection";
                     CloseClient();
-                }
+                }*/
                
             }); 
+        }
+
+        public void DisconnectConnection()
+        {
+            CloseClient();
         }
 
         public void DenyConnection()

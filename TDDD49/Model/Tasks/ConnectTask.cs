@@ -88,6 +88,10 @@ namespace TDDD49.ViewModel.Tasks
                 client.Close();
 
             }
+            catch (InvalidOperationException e)
+            {
+                Debug.WriteLine("InvalidOperationException", e);
+            }
             catch (ArgumentNullException e)
             {
                 Debug.WriteLine("ArgumentNullException: {0}", e);
@@ -97,6 +101,9 @@ namespace TDDD49.ViewModel.Tasks
                 //visa fönser med felmeddelande
                 Vmc.InformativeConnectBoxActive = true;
                 Debug.WriteLine("SocketException: {0}", e);
+            }
+            finally {
+                Vmc.ShowConnectionStatusMsg = "No connection";
             }
 
             Debug.WriteLine("\n Press Enter to continue...");
