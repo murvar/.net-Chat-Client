@@ -137,6 +137,13 @@
             </ListView>
 
 
+         <TextBox x:Name="MsgBox"
+                     Text="{Binding Path=MsgTxt}"/>
+            
+            <Button x:Name="SendMsg" 
+                    Margin="0,5,0,0" 
+                    Command="{Binding SendMessageCommand, Source={StaticResource vmc}}">Send Message</Button>
+
 
 
         </StackPanel>

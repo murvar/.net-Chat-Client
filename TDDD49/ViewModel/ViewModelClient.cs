@@ -22,8 +22,8 @@ namespace TDDD49.ViewModels
         public ClientListenCommand ClientListenCommand { get; set; }
         public AcceptConnectionCommand AcceptConnectionCommand { get; set; }
         public DenyConnectionCommand DenyConnectionCommand { get; set; }
-        public DisconnectConnectionCommand DisconnectConnectionCommand {get; set; }    
-
+        public DisconnectConnectionCommand DisconnectConnectionCommand {get; set; }
+        public SendMessageCommand SendMessageCommand { get; set; }
 
         private Connections connections;
 
@@ -115,6 +115,14 @@ namespace TDDD49.ViewModels
             }
         }
 
+        private String msgTxt;
+        public String MsgTxt
+        {
+            get { return msgTxt; }
+            set { msgTxt = value; }
+        }
+
+
         private MessageList messageList;
         public MessageList MessageList
         {
@@ -153,6 +161,7 @@ namespace TDDD49.ViewModels
             this.AcceptConnectionCommand = new AcceptConnectionCommand(this);
             this.DenyConnectionCommand = new DenyConnectionCommand(this);
             this.DisconnectConnectionCommand = new DisconnectConnectionCommand(this);
+            this.SendMessageCommand = new SendMessageCommand(this);
 
 
 
@@ -194,6 +203,14 @@ namespace TDDD49.ViewModels
             Debug.WriteLine("Terminating connetion");
             ShowConnectionStatusMsg = "No connection";
             connections.DisconnectConnection();
+        }
+
+        public void SendMessageMethod()
+        {
+            Debug.WriteLine("Sent message");
+            MessageList.Add(new Message(Name, "00:00:00", "aaaaaaaaa"));
+            //Connections.SendMessage(new Message(Name, "00:00:00", "aaaaaaaaa"));
+            //MsgTxt = "";
         }
 
 

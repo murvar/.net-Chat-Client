@@ -44,148 +44,143 @@ namespace TDDD49.ViewModel.Tasks
         {
             Task.Factory.StartNew(() =>
             {
-                Debug.WriteLine(" ConnectTask has now started!");
-                ConnectMethod(modelClient);
-            });
-        }
-        private void ConnectMethod(ModelClient modelClient)
-        {
-            try
-            {
-                Vmc.InformativeConnectBoxActive = false;
-                //göm fönser med felmeddelande
-                //Debug.WriteLine("hellooooooooooooooo");
-
-                // Create a TcpClient.
-                // Note, for this client to work you need to have a TcpServer
-                // connected to the same address as specified by the server, port
-                // combination.
-                String server = modelClient.Ip;
-                int port = modelClient.Port;
-
-                //IMPLEMENTERA DEFENSIV PROGRAMMERING HÄR
-
-                var something = new TcpClient(server, port);
-                client.Add(something);
-
-                Vmc.ShowConnectionStatusMsg = "Connected";
-
-                // Translate the passed message into ASCII and store it as a Byte array.
-                Byte[] data = System.Text.Encoding.ASCII.GetBytes(modelClient.Name);
-
-                // Get a client stream for reading and writing.
-                //Stream stream = client.GetStream();
-
-                NetworkStream stream = client[0].GetStream();
-
-                // Send the message to the connected TcpServer.
-                stream.Write(data, 0, data.Length);
-
-                Debug.WriteLine("Sent: {0}", modelClient.Name);
-
-                Debug.WriteLine(client[0].Connected);
-
-                while (true)
+                try
                 {
+                    Vmc.InformativeConnectBoxActive = false;
+                    //göm fönser med felmeddelande
+                    //Debug.WriteLine("hellooooooooooooooo");
+
+                    // Create a TcpClient.
+                    // Note, for this client to work you need to have a TcpServer
+                    // connected to the same address as specified by the server, port
+                    // combination.
+                    String server = modelClient.Ip;
+                    int port = modelClient.Port;
+
+                    //IMPLEMENTERA DEFENSIV PROGRAMMERING HÄR
+
+                    var something = new TcpClient(server, port);
+                    client.Add(something);
+
+                    Vmc.ShowConnectionStatusMsg = "Connected";
+
+                    // Translate the passed message into ASCII and store it as a Byte array.
+                    Byte[] data = System.Text.Encoding.ASCII.GetBytes(modelClient.Name);
+
+                    // Get a client stream for reading and writing.
+                    //Stream stream = client.GetStream();
+
+                    NetworkStream stream = client[0].GetStream();
+                    /**
+                    // Send the message to the connected TcpServer.
+                    stream.Write(data, 0, data.Length);
+
+                    Debug.WriteLine("Sent: {0}", modelClient.Name);
+
+                    Debug.WriteLine(client[0].Connected);
+
+                    while (true)
+                    {
 
 
-                    //Implementera abnryta connection knapp här
+                        //Implementera abnryta connection knapp här
 
-                    // Receive the TcpServer.response.
+                        // Receive the TcpServer.response.
 
-                    // Buffer to store the response bytes.
-                    data = new Byte[256];
+                        // Buffer to store the response bytes.
+                        data = new Byte[256];
 
-                    // String to store the response ASCII representation.
-                    String responseData = String.Empty;
+                        // String to store the response ASCII representation.
+                        String responseData = String.Empty;
 
-                    // Read the first batch of the TcpServer response bytes.
-                    Int32 bytes = stream.Read(data, 0, data.Length);
-                    responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                    //Debug.WriteLine("Received: {0}", responseData);
+                        // Read the first batch of the TcpServer response bytes.
+                        Int32 bytes = stream.Read(data, 0, data.Length);
+                        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                        //Debug.WriteLine("Received: {0}", responseData);
+
+                    }*/
 
                 }
-
-            }
-            catch (InvalidOperationException e)
-            {
-                Debug.WriteLine("InvalidOperationException", e);
-            }
-            catch (ArgumentNullException e)
-            {
-                Debug.WriteLine("ArgumentNullException: {0}", e);
-            }
-            catch (SocketException e)
-            {
-                //visa fönser med felmeddelande
-                Vmc.InformativeConnectBoxActive = true;
-                Debug.WriteLine("SocketException: {0}", e);
-            }
-
-            Debug.WriteLine("\n Press Enter to continue...");
-            Console.Read();
+                catch (InvalidOperationException e)
+                {
+                    Debug.WriteLine("InvalidOperationException", e);
+                }
+                catch (ArgumentNullException e)
+                {
+                    Debug.WriteLine("ArgumentNullException: {0}", e);
+                }
+                catch (SocketException e)
+                {
+                    //visa fönser med felmeddelande
+                    Vmc.InformativeConnectBoxActive = true;
+                    Debug.WriteLine("SocketException: {0}", e);
+                }
+            });
         }
 
         public void ListeningTaskMethod(int port)
         {
 
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew( async () =>
             {
-                ListeningMethod(port);
+                try
+                {
+                    //Debug.WriteLine("Running listening");
+                    // Set the TcpListener on port 13000.
+                    IPAddress localAddr = IPAddress.Parse("127.0.0.1");
+
+                    // TcpListener server = new TcpListener(port);
+                    Server = new TcpListener(localAddr, port);
+
+                    // Start listening for client requests.
+                    Server.Start();
+
+
+                    // Enter the listening loop.
+
+                    var something = await Server.AcceptTcpClientAsync();
+
+                    client.Add(something);
+                    Vmc.PopUpActive = true;
+                    /**
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                    Vmc.PopUpActive = true;
+                        Vmc.ShowConnectionStatusMsg = "Not Connected";
+                    }));
+                   */
+
+                    Debug.WriteLine("Connected!");
+
+
+
+                }
+                catch (SocketException e)
+                {
+                    Debug.WriteLine("SocketException: {0}", e);
+                }
+                finally
+                {
+                    // Stop listening for new clients.
+                    // Debug.WriteLine("server stopping");
+                    server.Stop();
+                }
+
+                //Debug.WriteLine("\nHit enter to continue...");
+                //Console.Read();
 
             });
 
         }
 
-        private async void ListeningMethod(int portListen)
+        public void SendMessage(Message msgObj)
         {
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(msgObj.Msg);
 
-            try
-            {
-                //Debug.WriteLine("Running listening");
-                // Set the TcpListener on port 13000.
-                int port = portListen;
-                IPAddress localAddr = IPAddress.Parse("127.0.0.1");
+            NetworkStream stream = client[0].GetStream();
+           
+            stream.Write(data, 0, data.Length);
 
-                // TcpListener server = new TcpListener(port);
-                Server = new TcpListener(localAddr, port);
-
-                // Start listening for client requests.
-                Server.Start();
-                
-
-                // Enter the listening loop.
-
-                var something = await Server.AcceptTcpClientAsync();
-
-                client.Add(something);
-                Vmc.PopUpActive = true;
-                /**
-                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                Vmc.PopUpActive = true;
-                    Vmc.ShowConnectionStatusMsg = "Not Connected";
-                }));
-               */
-
-                Debug.WriteLine("Connected!");
-
-
-
-            }
-            catch (SocketException e)
-            {
-                Debug.WriteLine("SocketException: {0}", e);
-            }
-            finally
-            {
-                // Stop listening for new clients.
-                // Debug.WriteLine("server stopping");
-                server.Stop();
-            }
-            
-            //Debug.WriteLine("\nHit enter to continue...");
-            //Console.Read();
         }
 
         public void AcceptConnection()
@@ -195,51 +190,12 @@ namespace TDDD49.ViewModel.Tasks
 
                 try
                 {
-                    Debug.WriteLine("HERE");
-                    Debug.WriteLine(client.Count);
-                    // Buffer for reading data
-                    Byte[] bytes = new Byte[256];
-                    String data = null;
-
-                    // Get a stream object for reading and writing
-                    if (!client.Any())
-                    {
-                        throw new Exception("fel");
-                    }
-                    NetworkStream stream = client[0].GetStream();
-                    int i;
-
-                    //while Answer {}
-                    // Loop to receive all the data sent by the client.
-                    /**
-                    while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
-                    {
-                        // Translate data bytes to a ASCII string.
-                        data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                        //Debug.WriteLine("Received: {0}", data);
-
-                        // Process the data sent by the client.
-                        data = data.ToUpper();
-
-                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
-
-                        // Send back a response.
-                        //stream.Write(msg, 0, msg.Length);
-                        
-                        break;
-                    }*/
                     Debug.WriteLine("WE are connected");
                 } 
                 catch (Exception e)
                 {
                     Debug.WriteLine(e);
-                }/*
-                finally
-                {
-                    Debug.WriteLine("HERE4");
-                    Vmc.ShowConnectionStatusMsg = "No connection";
-                    CloseClient();
-                }*/
+                }
                
             }); 
         }
