@@ -20,6 +20,7 @@
         <Grid.Resources>
             <vm:ViewModelClient x:Key="vmc"/>
             <BooleanToVisibilityConverter x:Key="TrueToVisibleConverter"/>
+            
         </Grid.Resources>
 
         <Label>Contacts</Label>
@@ -104,6 +105,36 @@
         <Button x:Name="endConnection" 
                     Margin="0,5,0,0" 
                     Command="{Binding DisconnectConnectionCommand}">Terminate Connection</Button>
+
+        <ListView DataContext="{Binding MessageList}" ItemsSource="{Binding}"
+                  ScrollViewer.VerticalScrollBarVisibility="Visible"
+                  ScrollViewer.CanContentScroll="False"
+                  Height="200">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Width="400"
+                            Height="50">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="{Binding Sender}" VerticalAlignment="Center" Margin="20 0">
+                            </TextBlock>
+                            <TextBlock Grid.Row="1" Text="{Binding Time}" VerticalAlignment="Center" Margin="20 0">
+                            </TextBlock>
+                            <TextBlock Grid.Row="2" Text="{Binding Msg}" VerticalAlignment="Center" Margin="20 0">
+                            </TextBlock>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            
+            </ListView>
 
 
 

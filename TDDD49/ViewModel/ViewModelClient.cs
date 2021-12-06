@@ -115,6 +115,13 @@ namespace TDDD49.ViewModels
             }
         }
 
+        private MessageList messageList;
+        public MessageList MessageList
+        {
+            get { return messageList; }
+            set { messageList = value; }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
@@ -139,6 +146,7 @@ namespace TDDD49.ViewModels
             this.ShowConnectionStatusMsg = "No connection";
 
             this.connections = new Connections(this);
+            this.MessageList = new MessageList();
 
             this.ClientFetchCommand = new ClientFetchCommand(this);
             this.ClientListenCommand = new ClientListenCommand(this);

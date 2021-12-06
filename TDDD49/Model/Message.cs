@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace TDDD49.Model
 {
-    internal class Message /*: INotifyPropertyChanged*/
+    public class Message : INotifyPropertyChanged
     {
+
         private string sender;
         public string Sender
         {
@@ -16,26 +17,48 @@ namespace TDDD49.Model
             set
             {
                 sender = value;
+                OnPropertyChanged("Sender");
             }
         }
 
-        private DateTime time;
-        public DateTime Time
+        private String time;
+        public String Time
         {
             get { return time; }
             set
             {
-                time = DateTime.Now;
+                time = value;
+                OnPropertyChanged("Time");
             }
         }
 
         private string msg;
+
         public string Msg
         {
             get { return msg; }
             set
             {
                 msg = value;
+                OnPropertyChanged("Msg");
+
+            }
+        }
+
+        public Message(String sender, String time, String msg)
+        {
+            this.Sender = sender;
+            this.Time = time;
+            this.Msg = msg;
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 

@@ -17,7 +17,6 @@
     <None Remove="ViewModel\Commands\fetch_data_client" />
     <None Remove="ViewModel\Commands\NewFile1.txt" />
     <None Remove="ViewModel\NewFile1.txt" />
-    <None Remove="Model\Tasks\NewFile1.txt" />
     <None Remove="View\NewFile1.txt" />
   </ItemGroup>
 
