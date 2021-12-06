@@ -10,10 +10,11 @@ using System.Net.Sockets;
 using System.Net;
 using System.Threading;
 using System.Windows;
+using System.ComponentModel;
 
 namespace TDDD49.ViewModel.Tasks
 {
-    internal class Connections
+    internal class Connections : INotifyPropertyChanged
     {
         public ViewModelClient Vmc { get; set; }
 
@@ -33,6 +34,26 @@ namespace TDDD49.ViewModel.Tasks
         }
 
         */
+
+        private Message recievedMessage;
+        public Message RecievedMessage
+        {
+            get { return recievedMessage; }
+            set { 
+                recievedMessage = value;
+                OnPropertyChanged("RecievedMessage");   
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
 
         public Connections(ViewModelClient vmc)
         {
@@ -115,6 +136,10 @@ namespace TDDD49.ViewModel.Tasks
                     Vmc.InformativeConnectBoxActive = true;
                     Debug.WriteLine("SocketException: {0}", e);
                 }
+                finally
+                {
+                    ListenForMessage();
+                }
             });
         }
 
@@ -183,6 +208,28 @@ namespace TDDD49.ViewModel.Tasks
 
         }
 
+        private void ListenForMessage()
+        {
+            Task.Factory.StartNew(async () =>
+            {
+                while (true)
+                {
+                    Byte[] data = new Byte[256];
+                    NetworkStream stream = client[0].GetStream();
+                    // String to store the response ASCII representation.
+                    String responseData = String.Empty;
+
+                    // Read the first batch of the TcpServer response bytes.
+                    Int32 bytes = stream.Read(data, 0, data.Length);
+                    responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                    Debug.WriteLine("Will now update REcVMESSAGE");
+                    RecievedMessage = new Message("SENDER", "00:00:00", responseData);
+                    Debug.WriteLine("RECIEVED DATA " + responseData);
+                    stream.Flush();
+                }
+            });
+        }
+
         public void AcceptConnection()
         {
             Task.Factory.StartNew(() =>
@@ -197,7 +244,9 @@ namespace TDDD49.ViewModel.Tasks
                     Debug.WriteLine(e);
                 }
                
-            }); 
+            });
+
+            ListenForMessage();
         }
 
         public void DisconnectConnection()

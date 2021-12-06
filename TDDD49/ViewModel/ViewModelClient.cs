@@ -119,7 +119,10 @@ namespace TDDD49.ViewModels
         public String MsgTxt
         {
             get { return msgTxt; }
-            set { msgTxt = value; }
+            set { 
+                msgTxt = value;
+                OnPropertyChanged("MsgTxt");
+            }
         }
 
 
@@ -130,6 +133,19 @@ namespace TDDD49.ViewModels
             set { messageList = value; }
         }
 
+        private Message recievedMessage;
+
+        public Message MyRecievedMessage
+        {
+            get { return connections.RecievedMessage; }
+            set { 
+                recievedMessage = value;
+                AddMessage();
+                //OnPropertyChanged("RecievedMessage");
+            }
+        }
+
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
@@ -139,8 +155,6 @@ namespace TDDD49.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-
-        
 
         public ViewModelClient()
         {
@@ -154,6 +168,8 @@ namespace TDDD49.ViewModels
             this.ShowConnectionStatusMsg = "No connection";
 
             this.connections = new Connections(this);
+            this.connections.PropertyChanged += connections_PropertyChanged;
+
             this.MessageList = new MessageList();
 
             this.ClientFetchCommand = new ClientFetchCommand(this);
@@ -165,6 +181,15 @@ namespace TDDD49.ViewModels
 
 
 
+        }
+
+        private void connections_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "RecievedMessage")
+            {
+                Debug.WriteLine("Updated recieed msg");
+                MyRecievedMessage = connections.RecievedMessage;
+            }
         }
 
         public void ClientFetchMethod()
@@ -208,15 +233,24 @@ namespace TDDD49.ViewModels
         public void SendMessageMethod()
         {
             Debug.WriteLine("Sent message");
-            MessageList.Add(new Message(Name, "00:00:00", "aaaaaaaaa"));
-            //Connections.SendMessage(new Message(Name, "00:00:00", "aaaaaaaaa"));
-            //MsgTxt = "";
+            MessageList.Add(new Message(Name, "00:00:00", MsgTxt));
+            connections.SendMessage(new Message(Name, "00:00:00", MsgTxt));
+            MsgTxt = "";
         }
 
+        private void AddMessage()
+        {
+            Debug.WriteLine("Trying to add data " + MyRecievedMessage.Msg);
+            App.Current.Dispatcher.Invoke((System.Action)delegate
+            {
+                MessageList.Add(MyRecievedMessage);
+                MyRecievedMessage = null;
+            });
+            //MessageList.Add(RecievedMessage);
+            //RecievedMessage = null;
 
-
+        }
     }
-
 }
 
 

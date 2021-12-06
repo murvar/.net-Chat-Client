@@ -112,8 +112,9 @@
                   Height="200">
                 <ListView.ItemTemplate>
                     <DataTemplate>
+                    <Border BorderBrush="Black" BorderThickness="2" CornerRadius="10">
                         <Grid Width="400"
-                            Height="50">
+                            Height="50" Background="Aqua">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -131,6 +132,7 @@
                             <TextBlock Grid.Row="2" Text="{Binding Msg}" VerticalAlignment="Center" Margin="20 0">
                             </TextBlock>
                         </Grid>
+                        </Border>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             
