@@ -25,8 +25,7 @@ namespace TDDD49.ViewModels
         public DisconnectConnectionCommand DisconnectConnectionCommand {get; set; }    
 
 
-        private ListeningTask listeningTask;
-        private ConnectTask connectTask;
+        private Connections connections;
 
         private ModelClient modelClient;
 
@@ -139,8 +138,7 @@ namespace TDDD49.ViewModels
             this.PopUpActive = false;
             this.ShowConnectionStatusMsg = "No connection";
 
-            this.listeningTask = new ListeningTask(this);
-            this.connectTask = new ConnectTask(this);
+            this.connections = new Connections(this);
 
             this.ClientFetchCommand = new ClientFetchCommand(this);
             this.ClientListenCommand = new ClientListenCommand(this);
@@ -154,13 +152,13 @@ namespace TDDD49.ViewModels
 
         public void ClientFetchMethod()
         {
-            connectTask.ConnectTaskMethod(modelClient);
+            connections.ConnectTaskMethod(modelClient);
         }
 
         public void ClientListenMethod()
         {
 
-            listeningTask.ListeningTaskMethod(ListeningPort);
+            connections.ListeningTaskMethod(ListeningPort);
         }
 
         public void createConnectionPromptWindow()
@@ -173,21 +171,21 @@ namespace TDDD49.ViewModels
             
             PopUpActive = false;
             ShowConnectionStatusMsg = "Connected";
-            listeningTask.AcceptConnection();
+            connections.AcceptConnection();
 
         }
 
         public void DenyConnectionMethod()
         {
             PopUpActive = false;
-            listeningTask.DenyConnection();
+            connections.DenyConnection();
         }
 
         public void DisconnectConnectionMethod()
         {
             Debug.WriteLine("Terminating connetion");
             ShowConnectionStatusMsg = "No connection";
-            listeningTask.DisconnectConnection();
+            connections.DisconnectConnection();
         }
 
 
