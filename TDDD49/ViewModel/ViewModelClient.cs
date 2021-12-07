@@ -12,6 +12,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.IO;
 using System.Windows;
+using System.Collections.ObjectModel;
 
 namespace TDDD49.ViewModels
 {
@@ -22,7 +23,7 @@ namespace TDDD49.ViewModels
         public ClientListenCommand ClientListenCommand { get; set; }
         public AcceptConnectionCommand AcceptConnectionCommand { get; set; }
         public DenyConnectionCommand DenyConnectionCommand { get; set; }
-        public DisconnectConnectionCommand DisconnectConnectionCommand {get; set; }
+        public DisconnectConnectionCommand DisconnectConnectionCommand { get; set; }
         public SendMessageCommand SendMessageCommand { get; set; }
 
         private Connections connections;
@@ -33,7 +34,7 @@ namespace TDDD49.ViewModels
         public bool PopUpActive
         {
             get { return popUpActive; }
-            set { 
+            set {
                 popUpActive = value;
                 OnPropertyChanged("PopUpActive");
             }
@@ -53,16 +54,16 @@ namespace TDDD49.ViewModels
         private String informativeConnectBoxMsg;
         public String InformativeConnectBoxMsg
         {
-            get { return informativeConnectBoxMsg;}
-            set { informativeConnectBoxMsg = value;}    
+            get { return informativeConnectBoxMsg; }
+            set { informativeConnectBoxMsg = value; }
         }
 
         private String showConnectionStatusMsg;
         public String ShowConnectionStatusMsg
         {
             get { return showConnectionStatusMsg; }
-            set 
-            { 
+            set
+            {
                 showConnectionStatusMsg = value;
                 OnPropertyChanged("ShowConnectionStatusMsg");
             }
@@ -119,31 +120,32 @@ namespace TDDD49.ViewModels
         public String MsgTxt
         {
             get { return msgTxt; }
-            set { 
+            set {
                 msgTxt = value;
                 OnPropertyChanged("MsgTxt");
             }
         }
 
-
+        
         private MessageList messageList;
         public MessageList MessageList
         {
             get { return messageList; }
             set { messageList = value; }
         }
-
-        private Message recievedMessage;
-
+        /**
         public Message MyRecievedMessage
         {
             get { return connections.RecievedMessage; }
             set { 
-                recievedMessage = value;
+                //recievedMessage = value;
                 AddMessage();
                 //OnPropertyChanged("RecievedMessage");
             }
         }
+        */
+
+        //public ObservableCollection<Message> MessageList { get; set; }
 
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -171,6 +173,8 @@ namespace TDDD49.ViewModels
             this.connections.PropertyChanged += connections_PropertyChanged;
 
             this.MessageList = new MessageList();
+            //this.MessageList = new ObservableCollection<Message>();
+
 
             this.ClientFetchCommand = new ClientFetchCommand(this);
             this.ClientListenCommand = new ClientListenCommand(this);
@@ -188,7 +192,8 @@ namespace TDDD49.ViewModels
             if (e.PropertyName == "RecievedMessage")
             {
                 Debug.WriteLine("Updated recieed msg");
-                MyRecievedMessage = connections.RecievedMessage;
+                //MyRecievedMessage = connections.RecievedMessage;
+                AddMessage();
             }
         }
 
@@ -240,14 +245,15 @@ namespace TDDD49.ViewModels
 
         private void AddMessage()
         {
-            Debug.WriteLine("Trying to add data " + MyRecievedMessage.Msg);
+            Debug.WriteLine("Trying to add data " + connections.RecievedMessage.Msg);
+            
             App.Current.Dispatcher.Invoke((System.Action)delegate
             {
-                MessageList.Add(MyRecievedMessage);
-                MyRecievedMessage = null;
+                MessageList.Add(connections.RecievedMessage);
             });
-            //MessageList.Add(RecievedMessage);
-            //RecievedMessage = null;
+            //MessageList.Add(connections.RecievedMessage);
+            //MessageList.Add(new Message(Name, "00:00:00", "teseestttt"));
+            //MyRecievedMessage = null;
 
         }
     }

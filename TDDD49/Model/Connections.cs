@@ -214,18 +214,25 @@ namespace TDDD49.ViewModel.Tasks
             {
                 while (true)
                 {
+
                     Byte[] data = new Byte[256];
                     NetworkStream stream = client[0].GetStream();
                     // String to store the response ASCII representation.
                     String responseData = String.Empty;
 
                     // Read the first batch of the TcpServer response bytes.
-                    Int32 bytes = stream.Read(data, 0, data.Length);
+                    Int32 bytes = await stream.ReadAsync(data, 0, data.Length);
                     responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
                     Debug.WriteLine("Will now update REcVMESSAGE");
-                    RecievedMessage = new Message("SENDER", "00:00:00", responseData);
-                    Debug.WriteLine("RECIEVED DATA " + responseData);
-                    stream.Flush();
+                    if(responseData != String.Empty)
+                    {
+                        RecievedMessage = new Message("SENDER", "00:00:00", responseData);
+                        stream.Flush();
+                    } else
+                    {
+                        CloseClient();
+                        break;
+                    }
                 }
             });
         }
