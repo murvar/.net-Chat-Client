@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -60,6 +61,15 @@ namespace TDDD49.Model
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        public JObject msgToJson()
+        {
+            return new JObject(
+                    new JProperty("sender", Sender),
+                    new JProperty("time", Time),
+                    new JProperty("msg", Msg)
+                    );
         }
 
 

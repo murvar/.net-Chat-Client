@@ -30,6 +30,8 @@ namespace TDDD49.ViewModels
 
         private ModelClient modelClient;
 
+        private FileWriter fileWriter;
+
         private bool popUpActive;
         public bool PopUpActive
         {
@@ -173,6 +175,7 @@ namespace TDDD49.ViewModels
             this.connections.PropertyChanged += connections_PropertyChanged;
 
             this.MessageList = new MessageList();
+            this.fileWriter = new FileWriter();
             //this.MessageList = new ObservableCollection<Message>();
 
 
@@ -250,6 +253,7 @@ namespace TDDD49.ViewModels
             App.Current.Dispatcher.Invoke((System.Action)delegate
             {
                 MessageList.Add(connections.RecievedMessage);
+                fileWriter.WriteToFile(connections.RecievedMessage.msgToJson());
             });
 
         }

@@ -240,6 +240,7 @@ namespace TDDD49.ViewModel.Tasks
                         Debug.WriteLine(responseData);
                         JObject o = JObject.Parse(responseData);
                         RecievedMessage = new Message((string)o["sender"], (string)o["time"], (string)o["msg"]);
+
                         stream.Flush();
                     } else
                     {
