@@ -238,8 +238,8 @@ namespace TDDD49.ViewModels
         public void SendMessageMethod()
         {
             Debug.WriteLine("Sent message");
-            MessageList.Add(new Message(Name, "00:00:00", MsgTxt));
-            connections.SendMessage(new Message(Name, "00:00:00", MsgTxt));
+            MessageList.Add(new Message(Name, DateTime.Now.ToString(), MsgTxt));
+            connections.SendMessage(new Message(Name, DateTime.Now.ToString(), MsgTxt));
             MsgTxt = "";
         }
 
@@ -251,9 +251,6 @@ namespace TDDD49.ViewModels
             {
                 MessageList.Add(connections.RecievedMessage);
             });
-            //MessageList.Add(connections.RecievedMessage);
-            //MessageList.Add(new Message(Name, "00:00:00", "teseestttt"));
-            //MyRecievedMessage = null;
 
         }
     }

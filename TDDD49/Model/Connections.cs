@@ -11,6 +11,7 @@ using System.Net;
 using System.Threading;
 using System.Windows;
 using System.ComponentModel;
+using Newtonsoft.Json.Linq;
 
 namespace TDDD49.ViewModel.Tasks
 {
@@ -200,7 +201,17 @@ namespace TDDD49.ViewModel.Tasks
 
         public void SendMessage(Message msgObj)
         {
-            Byte[] data = System.Text.Encoding.ASCII.GetBytes(msgObj.Msg);
+      
+            JObject jsonObj =
+                new JObject(
+                    new JProperty("sender", msgObj.Sender),
+                    new JProperty("time", msgObj.Time),
+                    new JProperty("msg", msgObj.Msg)
+                    );
+
+            String dataToSend = jsonObj.ToString();
+
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(dataToSend);
 
             NetworkStream stream = client[0].GetStream();
            
@@ -226,7 +237,9 @@ namespace TDDD49.ViewModel.Tasks
                     Debug.WriteLine("Will now update REcVMESSAGE");
                     if(responseData != String.Empty)
                     {
-                        RecievedMessage = new Message("SENDER", "00:00:00", responseData);
+                        Debug.WriteLine(responseData);
+                        JObject o = JObject.Parse(responseData);
+                        RecievedMessage = new Message((string)o["sender"], (string)o["time"], (string)o["msg"]);
                         stream.Flush();
                     } else
                     {
