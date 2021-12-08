@@ -43,3 +43,6 @@ C:\Users\Vincent\Documents\GitHub\tddd49\TDDD49\obj\Debug\net6.0-windows\TDDD49.
 C:\Users\Vincent\Documents\GitHub\tddd49\TDDD49\obj\Debug\net6.0-windows\TDDD49.genruntimeconfig.cache
 D:\TDDD49\TDDD49\bin\Debug\net6.0-windows\Newtonsoft.Json.dll
 D:\TDDD49\TDDD49\obj\Debug\net6.0-windows\TDDD49.csproj.CopyComplete
+C:\Users\Vincent\Documents\GitHub\tddd49\TDDD49\bin\Debug\net6.0-windows\Newtonsoft.Json.dll
+C:\Users\Vincent\Documents\GitHub\tddd49\TDDD49\obj\Debug\net6.0-windows\TDDD49.csproj.AssemblyReference.cache
+C:\Users\Vincent\Documents\GitHub\tddd49\TDDD49\obj\Debug\net6.0-windows\TDDD49.csproj.CopyComplete

@@ -221,6 +221,8 @@ namespace TDDD49.ViewModel.Tasks
 
         private void ListenForMessage()
         {
+            //finns tom konversation? Nej -> skapa ny tom
+
             Task.Factory.StartNew(async () =>
             {
                 while (true)

@@ -203,6 +203,7 @@ namespace TDDD49.ViewModels
         public void ClientFetchMethod()
         {
             connections.ConnectTaskMethod(modelClient);
+            fileWriter.InitConversation();
         }
 
         public void ClientListenMethod()
@@ -222,7 +223,7 @@ namespace TDDD49.ViewModels
             PopUpActive = false;
             ShowConnectionStatusMsg = "Connected";
             connections.AcceptConnection();
-
+            fileWriter.InitConversation();
         }
 
         public void DenyConnectionMethod()
@@ -241,8 +242,9 @@ namespace TDDD49.ViewModels
         public void SendMessageMethod()
         {
             Debug.WriteLine("Sent message");
-            MessageList.Add(new Message(Name, DateTime.Now.ToString(), MsgTxt));
-            connections.SendMessage(new Message(Name, DateTime.Now.ToString(), MsgTxt));
+            Message msg = new Message(Name, DateTime.Now.ToString(), MsgTxt);
+            WriteMessage(msg);
+            connections.SendMessage(msg);
             MsgTxt = "";
         }
 
@@ -252,9 +254,15 @@ namespace TDDD49.ViewModels
             
             App.Current.Dispatcher.Invoke((System.Action)delegate
             {
-                MessageList.Add(connections.RecievedMessage);
-                fileWriter.WriteToFile(connections.RecievedMessage.msgToJson());
+                WriteMessage(connections.RecievedMessage);
             });
+
+        }
+
+        private void WriteMessage(Message msg)
+        {
+            MessageList.Add(msg);
+            fileWriter.WriteToFile(msg.msgToJson());
 
         }
     }
