@@ -16,14 +16,17 @@ namespace TDDD49.Model
         private JObject conversations;
         public FileWriter()
         {
+            //Skapar folder
             Directory.CreateDirectory(@"c:\TDDD49STORAGE");
 
+            //Skapar fil
             File.WriteAllText(@"c:\TDDD49STORAGE\conversations.json", String.Empty);
 
             if (File.ReadAllText(@"c:\TDDD49STORAGE\conversations.json") == String.Empty)
                 {
+                    Debug.WriteLine("created conversations object");
                     conversations = new JObject(
-                        new JProperty("conversations", new JArray())
+                        new JProperty("conversations", new JArray(new JArray()))
                         );
                 }
                 else
@@ -39,23 +42,31 @@ namespace TDDD49.Model
             //ska parta konversation till jsonobj
             //ska lägga till jsonobj till hämtad json
             //ska skriva json till lokal fil
-           
-            List<List<Message>> Data = JsonConvert.DeserializeObject<List<List<Message>>>(conversations.First.ToString());
-       
-            Data[-1].Add(new Message((string)jsonObj["sender"], (string)jsonObj["time"], (string)jsonObj["msg"]));  //nytt meddelande tillagt i senaste konversationen
 
-            Debug.WriteLine(Data[-1][0].Msg);
+            //List<List<Message>> Data = JsonConvert.DeserializeObject<List<List<Message>>>(conversations.First.ToString());
+            //JObject oldConversations = JObject.Parse(File.ReadAllText(@"c:\TDDD49STORAGE\conversations.json"));
 
-            /**File.WriteAllText(@"c:\TDDD49STORAGE\conversations.json", jsonObj.ToString());
-
-            using (StreamWriter file = File.CreateText(@"c:\TDDD49STORAGE\conversations.json"))
-            using (JsonTextWriter writer = new JsonTextWriter(file))
+            JArray arrayOfConvos = (JArray)conversations["conversations"];
+            JArray aConvo;
+            if ((JArray)arrayOfConvos.Last == null)
             {
-                jsonObj.WriteTo(writer);
-            }*/
+                aConvo = new JArray();
+                arrayOfConvos.Add(aConvo);
+              }
+            else
+            {
+                aConvo = (JArray)arrayOfConvos.Last;
+            }
+            
+            aConvo.Add(jsonObj);
+
+            Debug.WriteLine(conversations.ToString());
+
+            File.WriteAllText(@"c:\TDDD49STORAGE\conversations.json", conversations.ToString());
+
 
         }
-
+        /**
         public void InitConversation()
         {
             //funktion ska skapa ny konversation (vid behov)
@@ -63,7 +74,7 @@ namespace TDDD49.Model
             {
                 conversations.AddAfterSelf(new JProperty("conversation", new JArray()));
             }
-        }
-
+        }*/
+        
     }
 }
