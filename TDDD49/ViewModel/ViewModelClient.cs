@@ -203,7 +203,7 @@ namespace TDDD49.ViewModels
         public void ClientFetchMethod()
         {
             connections.ConnectTaskMethod(modelClient);
-            //fileWriter.InitConversation();
+            fileWriter.InitConversation();
         }
 
         public void ClientListenMethod()
@@ -223,7 +223,7 @@ namespace TDDD49.ViewModels
             PopUpActive = false;
             ShowConnectionStatusMsg = "Connected";
             connections.AcceptConnection();
-            //fileWriter.InitConversation();
+            fileWriter.InitConversation();
         }
 
         public void DenyConnectionMethod()
