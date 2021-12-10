@@ -25,24 +25,24 @@ namespace TDDD49.Model
             }
 
             if (File.ReadAllText(@"c:\TDDD49STORAGE\conversations.json") == String.Empty)
-                {
-                    Debug.WriteLine("created conversations object");
-                    conversations = new JObject(
-                        new JProperty("conversations", new JArray(new JArray()))
-                        );
-                }
-                else
-                {
-                    conversations = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(@"c:\TDDD49STORAGE\conversations.json"));
-                }
+            {
+                Debug.WriteLine("created conversations object");
+                conversations = new JObject(
+                    new JProperty("conversations", new JArray()));
+            }
+            else
+            {
+                conversations = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(@"c:\TDDD49STORAGE\conversations.json"));
+                Debug.WriteLine(conversations.ToString());
+            }
         }
 
         public void WriteToFile(JObject jsonObj) 
         {
 
             JArray arrayOfConvos = (JArray)conversations["conversations"];
-            JArray aConvo = (JArray)arrayOfConvos.Last;        
-            
+            JObject conversation = (JObject)arrayOfConvos.Last;
+            JArray aConvo = (JArray)conversation["convo"];        
             aConvo.Add(jsonObj);
 
             Debug.WriteLine(conversations.ToString());
@@ -51,10 +51,13 @@ namespace TDDD49.Model
 
         }
         
-        public void InitConversation()
+        public void InitConversation(String name)
         {
+            Debug.WriteLine("Initialised conversations with name " + name);
             JArray arrayOfConvos = (JArray)conversations["conversations"];
-            arrayOfConvos.Add(new JArray());
+            arrayOfConvos.Add(new JObject(
+                new JProperty("name", name),
+                new JProperty("convo", new JArray())));
         }
        
     }

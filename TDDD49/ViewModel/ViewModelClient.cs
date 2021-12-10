@@ -79,8 +79,14 @@ namespace TDDD49.ViewModels
             set
             {
                 System.Diagnostics.Debug.WriteLine(value);
-                modelClient.Name = value;
-                OnPropertyChanged("Name");
+                if (connections != null) {
+                    if (!connections.Connected)
+                    {
+                        modelClient.Name = value;
+                        OnPropertyChanged("Name");
+                    }
+                }
+
             }
         }
 
@@ -128,7 +134,7 @@ namespace TDDD49.ViewModels
             }
         }
 
-        
+        /**
         private MessageList messageList;
         public MessageList MessageList
         {
@@ -146,8 +152,11 @@ namespace TDDD49.ViewModels
             }
         }
         */
+        private ObservableCollection<Message> messageList;
+        public ObservableCollection<Message> MessageList { get; set; }
+        private ObservableCollection<Message> convoHistory;
+        public ObservableCollection<Message> ConvoHistory { get; set; }
 
-        //public ObservableCollection<Message> MessageList { get; set; }
 
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -174,7 +183,8 @@ namespace TDDD49.ViewModels
             this.connections = new Connections(this);
             this.connections.PropertyChanged += connections_PropertyChanged;
 
-            this.MessageList = new MessageList();
+            this.MessageList = new ObservableCollection<Message>();
+            
             this.fileWriter = new FileWriter();
             //this.MessageList = new ObservableCollection<Message>();
 
@@ -195,35 +205,36 @@ namespace TDDD49.ViewModels
             if (e.PropertyName == "RecievedMessage")
             {
                 Debug.WriteLine("Updated recieed msg");
-                //MyRecievedMessage = connections.RecievedMessage;
                 AddMessage();
+            }
+            if(e.PropertyName == "Connected")
+            {
+
+                Debug.WriteLine("TEST DEBUG 4");
+                CheckIfClearListChat(connections.Connected);
+                
+                UpdateConnectedStatus(connections.Connected);
+                Debug.WriteLine("TEST DEBUG 6");
             }
         }
 
         public void ClientFetchMethod()
         {
             connections.ConnectTaskMethod(modelClient);
-            fileWriter.InitConversation();
+ 
         }
 
         public void ClientListenMethod()
         {
-
             connections.ListeningTaskMethod(ListeningPort);
-        }
-
-        public void createConnectionPromptWindow()
-        {
-
         }
 
         public void AcceptConnectionMethod()
         {
             
             PopUpActive = false;
-            ShowConnectionStatusMsg = "Connected";
-            connections.AcceptConnection();
-            fileWriter.InitConversation();
+            connections.AcceptConnection(modelClient.Name);
+ 
         }
 
         public void DenyConnectionMethod()
@@ -235,15 +246,16 @@ namespace TDDD49.ViewModels
         public void DisconnectConnectionMethod()
         {
             Debug.WriteLine("Terminating connetion");
-            ShowConnectionStatusMsg = "No connection";
+            //ShowConnectionStatusMsg = "No connection";
             connections.DisconnectConnection();
+            Debug.WriteLine(MessageList.Count);
         }
 
         public void SendMessageMethod()
         {
             Debug.WriteLine("Sent message");
             Message msg = new Message(Name, DateTime.Now.ToString(), MsgTxt);
-            WriteMessage(msg);
+            WriteMessageLocal(msg);
             connections.SendMessage(msg);
             MsgTxt = "";
         }
@@ -254,16 +266,39 @@ namespace TDDD49.ViewModels
             
             App.Current.Dispatcher.Invoke((System.Action)delegate
             {
-                WriteMessage(connections.RecievedMessage);
+                WriteMessageLocal(connections.RecievedMessage);
             });
 
         }
 
-        private void WriteMessage(Message msg)
+        private void WriteMessageLocal(Message msg)
         {
             MessageList.Add(msg);
             fileWriter.WriteToFile(msg.msgToJson());
 
+        }
+
+        private void CheckIfClearListChat(bool connected)
+        {
+            if (!connected)
+            {
+                MessageList.Clear();
+            } 
+
+        }
+
+        private void UpdateConnectedStatus(bool connected)
+        {
+            Debug.WriteLine("Connected is " + connected);
+            if(connected)
+            {
+                ShowConnectionStatusMsg = "Connected";
+                fileWriter.InitConversation(connections.ConnectedToUser);
+
+            } else
+            {
+                ShowConnectionStatusMsg = "No connection";
+            }
         }
     }
 }

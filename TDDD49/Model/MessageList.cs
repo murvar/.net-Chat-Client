@@ -7,4 +7,9 @@ public class MessageList : ObservableCollection<Message>
     {
         
     }
+
+    public void Clear()
+    {
+        this.Items.Clear();
+    }
 }

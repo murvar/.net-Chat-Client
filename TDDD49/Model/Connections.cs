@@ -26,6 +26,32 @@ namespace TDDD49.ViewModel.Tasks
             get { return server; }
         }
 
+        private bool connected;
+        public bool Connected
+        {
+            get { return connected; }
+            set {
+
+                connected = value;
+                OnPropertyChanged("Connected");
+
+            }
+        }
+
+        private String connectedToUser;
+        public String ConnectedToUser
+        {
+            get { return connectedToUser; }
+            set
+            {
+
+                connectedToUser = value;
+                OnPropertyChanged("ConnectedToUser");
+
+            }
+        }
+
+
         public static List<TcpClient> client = new List<TcpClient>();
         /**
         public List<TcpClient> Client 
@@ -64,63 +90,40 @@ namespace TDDD49.ViewModel.Tasks
 
         public void ConnectTaskMethod(ModelClient modelClient)
         {
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew(async () =>
             {
                 try
                 {
-                    Vmc.InformativeConnectBoxActive = false;
-                    //göm fönser med felmeddelande
-                    //Debug.WriteLine("hellooooooooooooooo");
-
-                    // Create a TcpClient.
-                    // Note, for this client to work you need to have a TcpServer
-                    // connected to the same address as specified by the server, port
-                    // combination.
                     String server = modelClient.Ip;
                     int port = modelClient.Port;
-
-                    //IMPLEMENTERA DEFENSIV PROGRAMMERING HÄR
-
                     var something = new TcpClient(server, port);
                     client.Add(something);
 
-                    Vmc.ShowConnectionStatusMsg = "Connected";
-
-                    // Translate the passed message into ASCII and store it as a Byte array.
-                    Byte[] data = System.Text.Encoding.ASCII.GetBytes(modelClient.Name);
-
-                    // Get a client stream for reading and writing.
-                    //Stream stream = client.GetStream();
-
+                    //SKiCKAR VÅRT NAMN TILL PERSON VI ANSLUTER TILL
+                    JObject jsonObj =
+                        new JObject(new JProperty("username", modelClient.Name));
+                    String dataToSend = jsonObj.ToString();
+                    Byte[] data = System.Text.Encoding.ASCII.GetBytes(dataToSend);
                     NetworkStream stream = client[0].GetStream();
-                    /**
-                    // Send the message to the connected TcpServer.
                     stream.Write(data, 0, data.Length);
+
+                    // AFTER THIS WE READ
 
                     Debug.WriteLine("Sent: {0}", modelClient.Name);
 
-                    Debug.WriteLine(client[0].Connected);
+                    // ÄR PÅ TOA <-----------
+  
 
-                    while (true)
-                    {
+                    //TAR EMOT NAMN FRÅN PERSON VI ANSLÖT TILL
+                    data = new Byte[256];
+                    String responseData = String.Empty;
+                    Int32 bytes = await stream.ReadAsync(data, 0, data.Length);
+                    responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                    JObject o = JObject.Parse(responseData);
+                    Debug.WriteLine("response from init connection is " + responseData);
+                    ConnectedToUser = (String)o["username"];
+                    //Debug.WriteLine("Received: {0}", responseData);
 
-
-                        //Implementera abnryta connection knapp här
-
-                        // Receive the TcpServer.response.
-
-                        // Buffer to store the response bytes.
-                        data = new Byte[256];
-
-                        // String to store the response ASCII representation.
-                        String responseData = String.Empty;
-
-                        // Read the first batch of the TcpServer response bytes.
-                        Int32 bytes = stream.Read(data, 0, data.Length);
-                        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                        //Debug.WriteLine("Received: {0}", responseData);
-
-                    }*/
 
                 }
                 catch (InvalidOperationException e)
@@ -134,11 +137,12 @@ namespace TDDD49.ViewModel.Tasks
                 catch (SocketException e)
                 {
                     //visa fönser med felmeddelande
-                    Vmc.InformativeConnectBoxActive = true;
+                    //Vmc.InformativeConnectBoxActive = true;
                     Debug.WriteLine("SocketException: {0}", e);
                 }
                 finally
                 {
+                    Connected = true;
                     ListenForMessage();
                 }
             });
@@ -151,34 +155,15 @@ namespace TDDD49.ViewModel.Tasks
             {
                 try
                 {
-                    //Debug.WriteLine("Running listening");
-                    // Set the TcpListener on port 13000.
                     IPAddress localAddr = IPAddress.Parse("127.0.0.1");
 
-                    // TcpListener server = new TcpListener(port);
                     Server = new TcpListener(localAddr, port);
-
-                    // Start listening for client requests.
                     Server.Start();
-
-
-                    // Enter the listening loop.
 
                     var something = await Server.AcceptTcpClientAsync();
 
                     client.Add(something);
                     Vmc.PopUpActive = true;
-                    /**
-                    Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                    Vmc.PopUpActive = true;
-                        Vmc.ShowConnectionStatusMsg = "Not Connected";
-                    }));
-                   */
-
-                    Debug.WriteLine("Connected!");
-
-
 
                 }
                 catch (SocketException e)
@@ -187,13 +172,9 @@ namespace TDDD49.ViewModel.Tasks
                 }
                 finally
                 {
-                    // Stop listening for new clients.
-                    // Debug.WriteLine("server stopping");
                     server.Stop();
                 }
 
-                //Debug.WriteLine("\nHit enter to continue...");
-                //Console.Read();
 
             });
 
@@ -240,31 +221,70 @@ namespace TDDD49.ViewModel.Tasks
                     if(responseData != String.Empty)
                     {
                         Debug.WriteLine(responseData);
+                        //responseData.Trim(new char[] { '\uFEFF', '\u200B' });
                         JObject o = JObject.Parse(responseData);
-                        RecievedMessage = new Message((string)o["sender"], (string)o["time"], (string)o["msg"]);
+                        if (o.ContainsKey("username"))
+                        {
+                            ConnectedToUser = (String)o["username"];
+                        }else
+                        {
+                            Debug.WriteLine("Debug 1");
+                            RecievedMessage = new Message((string)o["sender"], (string)o["time"], (string)o["msg"]);
+                            Debug.WriteLine("Debug 2");
+                        }
+
+
 
                         stream.Flush();
                     } else
                     {
-                        CloseClient();
+                        App.Current.Dispatcher.Invoke((System.Action)delegate
+                        {
+                            CloseClient();
+                        });
+                        
                         break;
                     }
                 }
             });
         }
 
-        public void AcceptConnection()
+        public void AcceptConnection(String name)
         {
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew(async () =>
             {
 
                 try
                 {
+
+                    Byte[] data = new Byte[256];
+                    NetworkStream stream = client[0].GetStream();
+                    String responseData = String.Empty;
+
+                    //TAR EMOT ANvÄNDARE SOM ANSLUTER TILL OSS
+                    Int32 bytes = await stream.ReadAsync(data, 0, data.Length);
+                    responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                    JObject o = JObject.Parse(responseData);
+                    Debug.WriteLine("response from init connection is " + responseData);
+                    ConnectedToUser = (String)o["username"];
+
+                    //SKICKAR VÅRT NAMN TILL ANVÄNDARE SOM ANSLUTER TILL OSS
+                    JObject jsonObj =
+                            new JObject(new JProperty("username", name));
+                    String dataToSend = jsonObj.ToString();
+                    data = System.Text.Encoding.ASCII.GetBytes(dataToSend);
+                    stream.Write(data, 0, data.Length);
+                    Debug.WriteLine("Sent name " + name);
                     Debug.WriteLine("WE are connected");
+
                 } 
                 catch (Exception e)
                 {
                     Debug.WriteLine(e);
+                }
+                finally
+                {
+                    Connected = true;
                 }
                
             });
@@ -284,7 +304,7 @@ namespace TDDD49.ViewModel.Tasks
 
         private void CloseClient()
         {
-            Vmc.ShowConnectionStatusMsg = "No connection";
+            Connected = false;
             client[0].Close();
             client.RemoveAt(0);
         }
