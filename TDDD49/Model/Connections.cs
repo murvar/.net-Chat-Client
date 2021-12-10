@@ -12,6 +12,7 @@ using System.Threading;
 using System.Windows;
 using System.ComponentModel;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace TDDD49.ViewModel.Tasks
 {
@@ -94,34 +95,48 @@ namespace TDDD49.ViewModel.Tasks
             {
                 try
                 {
+                    Vmc.InformativeConnectBoxActive = false;
+
                     String server = modelClient.Ip;
                     int port = modelClient.Port;
+
+                    //IMPLEMENTERA DEFENSIV PROGRAMMERING HÄR
+
                     var something = new TcpClient(server, port);
                     client.Add(something);
 
-                    //SKiCKAR VÅRT NAMN TILL PERSON VI ANSLUTER TILL
-                    JObject jsonObj =
-                        new JObject(new JProperty("username", modelClient.Name));
-                    String dataToSend = jsonObj.ToString();
-                    Byte[] data = System.Text.Encoding.ASCII.GetBytes(dataToSend);
-                    NetworkStream stream = client[0].GetStream();
-                    stream.Write(data, 0, data.Length);
+                    Vmc.ShowConnectionStatusMsg = "Connected";
 
-                    // AFTER THIS WE READ
+                    // Translate the passed message into ASCII and store it as a Byte array.
+                    Byte[] data = System.Text.Encoding.ASCII.GetBytes(modelClient.Name);
+
+                    // Get a client stream for reading and writing.
+                    //Stream stream = client.GetStream();
+
+                    NetworkStream stream = client[0].GetStream();
+                    
+                    // Send the message to the connected TcpServer.
+                    stream.Write(data, 0, data.Length);
 
                     Debug.WriteLine("Sent: {0}", modelClient.Name);
 
-                    // ÄR PÅ TOA <-----------
-  
+                    Debug.WriteLine(client[0].Connected);
 
-                    //TAR EMOT NAMN FRÅN PERSON VI ANSLÖT TILL
+                    //Implementera abnryta connection knapp här
+
+                    // Receive the TcpServer.response.
+
+                    // Buffer to store the response bytes.
                     data = new Byte[256];
+
+                    // String to store the response ASCII representation.
                     String responseData = String.Empty;
+
+                    // Read the first batch of the TcpServer response bytes.
                     Int32 bytes = await stream.ReadAsync(data, 0, data.Length);
                     responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                    JObject o = JObject.Parse(responseData);
                     Debug.WriteLine("response from init connection is " + responseData);
-                    ConnectedToUser = (String)o["username"];
+                    ConnectedToUser = responseData;
                     //Debug.WriteLine("Received: {0}", responseData);
 
 
@@ -221,18 +236,12 @@ namespace TDDD49.ViewModel.Tasks
                     if(responseData != String.Empty)
                     {
                         Debug.WriteLine(responseData);
-                        //responseData.Trim(new char[] { '\uFEFF', '\u200B' });
-                        JObject o = JObject.Parse(responseData);
-                        if (o.ContainsKey("username"))
-                        {
-                            ConnectedToUser = (String)o["username"];
-                        }else
-                        {
-                            Debug.WriteLine("Debug 1");
-                            RecievedMessage = new Message((string)o["sender"], (string)o["time"], (string)o["msg"]);
-                            Debug.WriteLine("Debug 2");
-                        }
-
+                        Debug.WriteLine("Debug 1");
+                        //JObject o = JObject.Parse(responseData);
+                        JObject o = JsonConvert.DeserializeObject<JObject>(responseData);
+                        Debug.WriteLine("Debug 2");
+                        RecievedMessage = new Message((string)o["sender"], (string)o["time"], (string)o["msg"]);
+                        Debug.WriteLine("Debug 3");
 
 
                         stream.Flush();
@@ -261,18 +270,12 @@ namespace TDDD49.ViewModel.Tasks
                     NetworkStream stream = client[0].GetStream();
                     String responseData = String.Empty;
 
-                    //TAR EMOT ANvÄNDARE SOM ANSLUTER TILL OSS
                     Int32 bytes = await stream.ReadAsync(data, 0, data.Length);
                     responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                    JObject o = JObject.Parse(responseData);
-                    Debug.WriteLine("response from init connection is " + responseData);
-                    ConnectedToUser = (String)o["username"];
+                    Debug.WriteLine("Connected to user " + responseData);
+                    ConnectedToUser = responseData;
 
-                    //SKICKAR VÅRT NAMN TILL ANVÄNDARE SOM ANSLUTER TILL OSS
-                    JObject jsonObj =
-                            new JObject(new JProperty("username", name));
-                    String dataToSend = jsonObj.ToString();
-                    data = System.Text.Encoding.ASCII.GetBytes(dataToSend);
+                    data = System.Text.Encoding.ASCII.GetBytes(name);
                     stream.Write(data, 0, data.Length);
                     Debug.WriteLine("Sent name " + name);
                     Debug.WriteLine("WE are connected");
