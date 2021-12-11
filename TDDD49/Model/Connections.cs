@@ -211,7 +211,7 @@ namespace TDDD49.ViewModel.Tasks
                         JObject o = JObject.Parse(responseData);
                         if (o.ContainsKey("handshake"))
                         {
-                            connectedToUser = (string)o["handshake"];
+                            ConnectedToUser = (string)o["handshake"];
                         } else
                         {
                             Debug.WriteLine("Debug 2");

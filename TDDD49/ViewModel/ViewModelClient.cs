@@ -216,6 +216,11 @@ namespace TDDD49.ViewModels
                 UpdateConnectedStatus(connections.Connected);
                 Debug.WriteLine("TEST DEBUG 6");
             }
+
+            if(e.PropertyName == "ConnectedToUser")
+            {
+                InitConvo(connections.ConnectedToUser);
+            }
         }
 
         public void ClientFetchMethod()
@@ -293,12 +298,18 @@ namespace TDDD49.ViewModels
             if(connected)
             {
                 ShowConnectionStatusMsg = "Connected";
-                fileWriter.InitConversation(connections.ConnectedToUser);
+                
 
             } else
             {
                 ShowConnectionStatusMsg = "No connection";
             }
+        }
+
+        private void InitConvo(string name)
+        {
+            Debug.WriteLine("Wanting to init convo with name " + name);
+            fileWriter.InitConversation(name);
         }
     }
 }
