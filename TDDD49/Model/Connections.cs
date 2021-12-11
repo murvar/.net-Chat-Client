@@ -54,14 +54,6 @@ namespace TDDD49.ViewModel.Tasks
 
 
         public static List<TcpClient> client = new List<TcpClient>();
-        /**
-        public List<TcpClient> Client 
-        { 
-            set { client = value; } 
-            get { return client; }
-        }
-
-        */
 
         private Message recievedMessage;
         public Message RecievedMessage
@@ -105,41 +97,6 @@ namespace TDDD49.ViewModel.Tasks
                     var something = new TcpClient(server, port);
                     client.Add(something);
                     HandShake(modelClient.Name);
-                    /**
-                   Vmc.ShowConnectionStatusMsg = "Connected";
-
-                   // Translate the passed message into ASCII and store it as a Byte array.
-                   Byte[] data = System.Text.Encoding.ASCII.GetBytes(modelClient.Name);
-
-                   // Get a client stream for reading and writing.
-                   //Stream stream = client.GetStream();
-
-                   NetworkStream stream = client[0].GetStream();
-                   
-                   // Send the message to the connected TcpServer.
-                   stream.Write(data, 0, data.Length);
-
-                   Debug.WriteLine("Sent: {0}", modelClient.Name);
-
-                   Debug.WriteLine(client[0].Connected);
-
-                   //Implementera abnryta connection knapp här
-
-                   // Receive the TcpServer.response.
-
-                   // Buffer to store the response bytes.
-                   data = new Byte[256];
-
-                   // String to store the response ASCII representation.
-                   String responseData = String.Empty;
-
-                   // Read the first batch of the TcpServer response bytes.
-                  
-                   Int32 bytes = await stream.ReadAsync(data, 0, data.Length);
-                   responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                   Debug.WriteLine("response from init connection is " + responseData);
-                   ConnectedToUser = responseData;*/
-                    //Debug.WriteLine("Received: {0}", responseData);
 
 
                 }
@@ -284,21 +241,6 @@ namespace TDDD49.ViewModel.Tasks
                 try
                 {
                     HandShake(name);
-                     /**
-                    Byte[] data = new Byte[256];
-                    NetworkStream stream = client[0].GetStream();
-                    String responseData = String.Empty;
-
-                    Int32 bytes = await stream.ReadAsync(data, 0, data.Length);
-                    responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                    Debug.WriteLine("Connected to user " + responseData);
-                    ConnectedToUser = responseData;
-
-                    data = System.Text.Encoding.ASCII.GetBytes(name);
-                    stream.Write(data, 0, data.Length);
-                    Debug.WriteLine("Sent name " + name);
-                    Debug.WriteLine("WE are connected");
-                     */
                 } 
                 catch (Exception e)
                 {
