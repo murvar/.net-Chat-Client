@@ -26,6 +26,8 @@ namespace TDDD49.ViewModels
         public DisconnectConnectionCommand DisconnectConnectionCommand { get; set; }
         public SendMessageCommand SendMessageCommand { get; set; }
 
+        public ShowOldConversationCommand ShowOldConversationCommand { get; set; }
+
         private Connections connections;
 
         private ModelClient modelClient;
@@ -134,28 +136,14 @@ namespace TDDD49.ViewModels
             }
         }
 
-        /**
-        private MessageList messageList;
-        public MessageList MessageList
-        {
-            get { return messageList; }
-            set { messageList = value; }
-        }
-        /**
-        public Message MyRecievedMessage
-        {
-            get { return connections.RecievedMessage; }
-            set { 
-                //recievedMessage = value;
-                AddMessage();
-                //OnPropertyChanged("RecievedMessage");
-            }
-        }
-        */
+
         private ObservableCollection<Message> messageList;
         public ObservableCollection<Message> MessageList { get; set; }
-        private ObservableCollection<Message> convoHistory;
-        public ObservableCollection<Message> ConvoHistory { get; set; }
+        private ObservableCollection<Conversation> convoHistory;
+        public ObservableCollection<Conversation> ConvoHistory { 
+            get { return convoHistory; } 
+            set { convoHistory = value; }
+        }
 
 
 
@@ -184,9 +172,12 @@ namespace TDDD49.ViewModels
             this.connections.PropertyChanged += connections_PropertyChanged;
 
             this.MessageList = new ObservableCollection<Message>();
+
             
             this.fileWriter = new FileWriter();
-            //this.MessageList = new ObservableCollection<Message>();
+
+            this.ConvoHistory = new ObservableCollection<Conversation>(fileWriter.GetHistory());
+  
 
 
             this.ClientFetchCommand = new ClientFetchCommand(this);
@@ -195,6 +186,7 @@ namespace TDDD49.ViewModels
             this.DenyConnectionCommand = new DenyConnectionCommand(this);
             this.DisconnectConnectionCommand = new DisconnectConnectionCommand(this);
             this.SendMessageCommand = new SendMessageCommand(this);
+            this.ShowOldConversationCommand = new ShowOldConversationCommand(this);
 
 
 
@@ -204,19 +196,13 @@ namespace TDDD49.ViewModels
         {
             if (e.PropertyName == "RecievedMessage")
             {
-                Debug.WriteLine("Updated recieed msg");
                 AddMessage();
             }
             if(e.PropertyName == "Connected")
             {
-
-                Debug.WriteLine("TEST DEBUG 4");
                 CheckIfClearListChat(connections.Connected);
-                
                 UpdateConnectedStatus(connections.Connected);
-                Debug.WriteLine("TEST DEBUG 6");
             }
-
             if(e.PropertyName == "ConnectedToUser")
             {
                 InitConvo(connections.ConnectedToUser);
@@ -250,15 +236,11 @@ namespace TDDD49.ViewModels
 
         public void DisconnectConnectionMethod()
         {
-            Debug.WriteLine("Terminating connetion");
-            //ShowConnectionStatusMsg = "No connection";
             connections.DisconnectConnection();
-            Debug.WriteLine(MessageList.Count);
         }
 
         public void SendMessageMethod()
         {
-            Debug.WriteLine("Sent message");
             Message msg = new Message(Name, DateTime.Now.ToString(), MsgTxt);
             WriteMessageLocal(msg);
             connections.SendMessage(msg);
@@ -267,8 +249,6 @@ namespace TDDD49.ViewModels
 
         private void AddMessage()
         {
-            Debug.WriteLine("Trying to add data " + connections.RecievedMessage.Msg);
-            
             App.Current.Dispatcher.Invoke((System.Action)delegate
             {
                 WriteMessageLocal(connections.RecievedMessage);
@@ -294,22 +274,31 @@ namespace TDDD49.ViewModels
 
         private void UpdateConnectedStatus(bool connected)
         {
-            Debug.WriteLine("Connected is " + connected);
+            Debug.WriteLine("Now running updating connected");
             if(connected)
             {
                 ShowConnectionStatusMsg = "Connected";
-                
-
-            } else
+            } 
+            else
             {
+                this.ConvoHistory.Insert(0, fileWriter.GetLatestConvo());
                 ShowConnectionStatusMsg = "No connection";
             }
         }
 
         private void InitConvo(string name)
         {
-            Debug.WriteLine("Wanting to init convo with name " + name);
             fileWriter.InitConversation(name);
+        }
+
+        public void ShowOldConversationMethod(List<Message> aList)
+        {
+            if (!connections.Connected)
+            {
+                Debug.WriteLine("Should update chat right now");
+                MessageList.Clear();
+                aList.ToList().ForEach(a => MessageList.Add(a)); ;
+            }
         }
     }
 }
