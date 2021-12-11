@@ -104,39 +104,41 @@ namespace TDDD49.ViewModel.Tasks
 
                     var something = new TcpClient(server, port);
                     client.Add(something);
+                    HandShake(modelClient.Name);
+                    /**
+                   Vmc.ShowConnectionStatusMsg = "Connected";
 
-                    Vmc.ShowConnectionStatusMsg = "Connected";
+                   // Translate the passed message into ASCII and store it as a Byte array.
+                   Byte[] data = System.Text.Encoding.ASCII.GetBytes(modelClient.Name);
 
-                    // Translate the passed message into ASCII and store it as a Byte array.
-                    Byte[] data = System.Text.Encoding.ASCII.GetBytes(modelClient.Name);
+                   // Get a client stream for reading and writing.
+                   //Stream stream = client.GetStream();
 
-                    // Get a client stream for reading and writing.
-                    //Stream stream = client.GetStream();
+                   NetworkStream stream = client[0].GetStream();
+                   
+                   // Send the message to the connected TcpServer.
+                   stream.Write(data, 0, data.Length);
 
-                    NetworkStream stream = client[0].GetStream();
-                    
-                    // Send the message to the connected TcpServer.
-                    stream.Write(data, 0, data.Length);
+                   Debug.WriteLine("Sent: {0}", modelClient.Name);
 
-                    Debug.WriteLine("Sent: {0}", modelClient.Name);
+                   Debug.WriteLine(client[0].Connected);
 
-                    Debug.WriteLine(client[0].Connected);
+                   //Implementera abnryta connection knapp här
 
-                    //Implementera abnryta connection knapp här
+                   // Receive the TcpServer.response.
 
-                    // Receive the TcpServer.response.
+                   // Buffer to store the response bytes.
+                   data = new Byte[256];
 
-                    // Buffer to store the response bytes.
-                    data = new Byte[256];
+                   // String to store the response ASCII representation.
+                   String responseData = String.Empty;
 
-                    // String to store the response ASCII representation.
-                    String responseData = String.Empty;
-
-                    // Read the first batch of the TcpServer response bytes.
-                    Int32 bytes = await stream.ReadAsync(data, 0, data.Length);
-                    responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                    Debug.WriteLine("response from init connection is " + responseData);
-                    ConnectedToUser = responseData;
+                   // Read the first batch of the TcpServer response bytes.
+                  
+                   Int32 bytes = await stream.ReadAsync(data, 0, data.Length);
+                   responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                   Debug.WriteLine("response from init connection is " + responseData);
+                   ConnectedToUser = responseData;*/
                     //Debug.WriteLine("Received: {0}", responseData);
 
 
@@ -197,22 +199,33 @@ namespace TDDD49.ViewModel.Tasks
 
         public void SendMessage(Message msgObj)
         {
-      
             JObject jsonObj =
                 new JObject(
                     new JProperty("sender", msgObj.Sender),
                     new JProperty("time", msgObj.Time),
                     new JProperty("msg", msgObj.Msg)
                     );
+            Send(jsonObj);
+        }
 
-            String dataToSend = jsonObj.ToString();
+        public void HandShake(String name)
+        {
+            JObject jsonObj =
+                new JObject(
+                    new JProperty("handshake", name));
+            Send(jsonObj);
+
+        }
+
+        public void Send(JObject dataAsJson)
+        {
+            String dataToSend = dataAsJson.ToString();
 
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(dataToSend);
 
             NetworkStream stream = client[0].GetStream();
-           
-            stream.Write(data, 0, data.Length);
 
+            stream.Write(data, 0, data.Length);
         }
 
         private void ListenForMessage()
@@ -238,11 +251,16 @@ namespace TDDD49.ViewModel.Tasks
                         Debug.WriteLine(responseData);
                         Debug.WriteLine("Debug 1");
                         //JObject o = JObject.Parse(responseData);
-                        JObject o = JsonConvert.DeserializeObject<JObject>(responseData);
-                        Debug.WriteLine("Debug 2");
-                        RecievedMessage = new Message((string)o["sender"], (string)o["time"], (string)o["msg"]);
-                        Debug.WriteLine("Debug 3");
-
+                        JObject o = JObject.Parse(responseData);
+                        if (o.ContainsKey("handshake"))
+                        {
+                            connectedToUser = (string)o["handshake"];
+                        } else
+                        {
+                            Debug.WriteLine("Debug 2");
+                            RecievedMessage = new Message((string)o["sender"], (string)o["time"], (string)o["msg"]);
+                            Debug.WriteLine("Debug 3");
+                        }
 
                         stream.Flush();
                     } else
@@ -265,7 +283,8 @@ namespace TDDD49.ViewModel.Tasks
 
                 try
                 {
-
+                    HandShake(name);
+                     /**
                     Byte[] data = new Byte[256];
                     NetworkStream stream = client[0].GetStream();
                     String responseData = String.Empty;
@@ -279,7 +298,7 @@ namespace TDDD49.ViewModel.Tasks
                     stream.Write(data, 0, data.Length);
                     Debug.WriteLine("Sent name " + name);
                     Debug.WriteLine("WE are connected");
-
+                     */
                 } 
                 catch (Exception e)
                 {
