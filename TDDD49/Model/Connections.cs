@@ -65,6 +65,22 @@ namespace TDDD49.ViewModel.Tasks
             }
         }
 
+        private bool buzzed;
+
+        public bool Buzzed
+        {
+            get { return buzzed; }
+            set { 
+                buzzed = value;
+                if(value == true)
+                {
+                    Buzzed = false;
+                    OnPropertyChanged("Buzzed");
+                }
+            }
+        }
+
+
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
         {
@@ -174,6 +190,12 @@ namespace TDDD49.ViewModel.Tasks
 
         }
 
+        public void SendBuzz()
+        {
+            JObject jsonObj = new JObject(new JProperty("buzz", "you've been buzzeeedddd"));
+            Send(jsonObj);
+        }
+
         public void Send(JObject dataAsJson)
         {
             String dataToSend = dataAsJson.ToString();
@@ -212,7 +234,13 @@ namespace TDDD49.ViewModel.Tasks
                         if (o.ContainsKey("handshake"))
                         {
                             ConnectedToUser = (string)o["handshake"];
-                        } else
+                        } 
+                        else if (o.ContainsKey("buzz"))
+                        {
+
+                            Buzzed = true;
+                        }
+                        else
                         {
                             Debug.WriteLine("Debug 2");
                             RecievedMessage = new Message((string)o["sender"], (string)o["time"], (string)o["msg"]);

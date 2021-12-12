@@ -16,6 +16,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Windows.Threading;
 
 namespace TDDD49.ViewModels
 {
@@ -28,8 +29,8 @@ namespace TDDD49.ViewModels
         public DenyConnectionCommand DenyConnectionCommand { get; set; }
         public DisconnectConnectionCommand DisconnectConnectionCommand { get; set; }
         public SendMessageCommand SendMessageCommand { get; set; }
-
         public ShowOldConversationCommand ShowOldConversationCommand { get; set; }
+        public BuzzCommand BuzzCommand { get; set; }
 
         private Connections connections;
 
@@ -209,6 +210,7 @@ namespace TDDD49.ViewModels
             this.DisconnectConnectionCommand = new DisconnectConnectionCommand(this);
             this.SendMessageCommand = new SendMessageCommand(this);
             this.ShowOldConversationCommand = new ShowOldConversationCommand(this);
+            this.BuzzCommand = new BuzzCommand(this);
 
 
 
@@ -224,6 +226,11 @@ namespace TDDD49.ViewModels
             {
                 CheckIfClearListChat(connections.Connected);
                 UpdateConnectedStatus(connections.Connected);
+            }
+            if(e.PropertyName == "Buzzed")
+            {
+                Debug.WriteLine("Should now buzz");
+                Buzz();
             }
             if(e.PropertyName == "ConnectedToUser")
             {
@@ -343,6 +350,16 @@ namespace TDDD49.ViewModels
             //ConvoHistory.Clear();
             //conversations.ToList().ForEach(conversation => ConvoHistory.Add(conversation)); 
             //CollectionViewSource.GetDefaultView(ConvoHistory).Refresh();
+        }
+
+        public void BuzzMethod()
+        {
+            connections.SendBuzz();
+        }
+
+        private void Buzz()
+        {
+            Console.Beep(1500, 100);
         }
     }
 }

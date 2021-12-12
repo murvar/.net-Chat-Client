@@ -144,6 +144,10 @@
                     Margin="0,5,0,0" 
                     Command="{Binding SendMessageCommand, Source={StaticResource vmc}}">Send Message</Button>
 
+            <Button x:Name="SendBuzz" 
+                    Margin="0,5,0,0" 
+                    Command="{Binding BuzzCommand, Source={StaticResource vmc}}">Buzz</Button>
+
 
 
         </StackPanel>
