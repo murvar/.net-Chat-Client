@@ -1,10 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TDDD49.Model
 {
@@ -34,7 +30,6 @@ namespace TDDD49.Model
         }
 
         private string msg;
-
         public string Msg
         {
             get { return msg; }
@@ -46,13 +41,6 @@ namespace TDDD49.Model
             }
         }
 
-        public Message(String sender, String time, String msg)
-        {
-            this.Sender = sender;
-            this.Time = time;
-            this.Msg = msg;
-        }
-
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
@@ -61,6 +49,13 @@ namespace TDDD49.Model
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        public Message(String sender, String time, String msg)
+        {
+            this.Sender = sender;
+            this.Time = time;
+            this.Msg = msg;
         }
 
         public JObject msgToJson()

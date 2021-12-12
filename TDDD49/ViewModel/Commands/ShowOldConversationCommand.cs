@@ -27,7 +27,6 @@ namespace TDDD49.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            //List<customObject> 
             List<Message> obj = parameter as List<Message>;
             this.Vmc.ShowOldConversationMethod(obj);
         }

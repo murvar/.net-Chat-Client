@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TDDD49.Model
+﻿namespace TDDD49.Model
 {
-    internal class ModelClient /*: INotifyPropertyChanged*/
+    public class ModelClient 
     {
-        private string name;
-        public string Name
+        private string? name;
+        public string? Name
         {
             get { return name; }
             set
@@ -25,50 +18,37 @@ namespace TDDD49.Model
             get { return ip; }
             set 
             {
-                System.Diagnostics.Debug.WriteLine(value);
                 ip = value;
-                //OnPropertyChanged("Ip");
             }
         }
 
-        private string port;
-        public string Port
+        private string? port;
+        public string? Port
         {
             get { return port; }
             set 
             {
-                System.Diagnostics.Debug.WriteLine(value);
                 port = value;
-                //OnPropertyChanged("Port");
             }
         }
 
-        private string listeningPort;
+        private string? listeningPort;
 
-        public string ListeningPort
+        public string? ListeningPort
         {
             get { return listeningPort; }
             set
             {
-                System.Diagnostics.Debug.WriteLine(value);
                 listeningPort = value;
-                //OnPropertyChanged("ListeningPort");
             }
         }
 
-
-        //public event PropertyChangedEventHandler? PropertyChanged;
-
-        /*
-        private void OnPropertyChanged(string propertyName)
+        public ModelClient()
         {
-            if (propertyName != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }*/
-
-
-
+            this.Name = null;
+            this.Ip = null;
+            this.Port = null;
+            this.ListeningPort = null;
+        }
     }
 }

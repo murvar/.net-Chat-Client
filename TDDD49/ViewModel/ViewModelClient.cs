@@ -3,20 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TDDD49.Model;
 using TDDD49.ViewModel.Commands;
 using TDDD49.ViewModel.Tasks;
-using System.Net.Sockets;
-using System.Net;
-using System.IO;
-using System.Windows;
 using System.Collections.ObjectModel;
-using System.Windows.Data;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using System.Windows.Threading;
 
 namespace TDDD49.ViewModels
 {
@@ -33,13 +25,27 @@ namespace TDDD49.ViewModels
         public BuzzCommand BuzzCommand { get; set; }
 
         private Connections connections;
+        private Connections Connections
+        {
+            get { return connections; }
+            set { connections = value; }
+        }
 
         private ModelClient modelClient;
+        private  ModelClient ModelClient
+        {
+            get { return modelClient; }
+            set { modelClient = value; }
+        }
 
         private FileWriter fileWriter;
+        private FileWriter FileWriter
+        {
+            get { return fileWriter; }
+            set { fileWriter = value; }
+        }
 
         private bool showPanel;
-
         public bool ShowPanel
         {
             get { return showPanel; }
@@ -48,7 +54,6 @@ namespace TDDD49.ViewModels
                 OnPropertyChanged("ShowPanel");
             }
         }
-
 
         private bool popUpActive;
         public bool PopUpActive
@@ -89,14 +94,11 @@ namespace TDDD49.ViewModels
             }
         }
 
-
-
         public string Name
         {
             get { return modelClient.Name; }
             set
             {
-                System.Diagnostics.Debug.WriteLine(value);
                 if (connections != null) {
                     if (!connections.Connected)
                     {
@@ -104,7 +106,6 @@ namespace TDDD49.ViewModels
                         OnPropertyChanged("Name");
                     }
                 }
-
             }
         }
 
@@ -113,7 +114,6 @@ namespace TDDD49.ViewModels
             get { return modelClient.Ip; }
             set
             {
-                System.Diagnostics.Debug.WriteLine(value);
                 modelClient.Ip = value;
                 OnPropertyChanged("Ip");
             }
@@ -124,7 +124,6 @@ namespace TDDD49.ViewModels
             get { return modelClient.Port; }
             set
             {
-                System.Diagnostics.Debug.WriteLine(value);
                 modelClient.Port = value;
                 OnPropertyChanged("Port");
             }
@@ -136,14 +135,11 @@ namespace TDDD49.ViewModels
             set
             {
                 modelClient.ListeningPort = value;
-                System.Diagnostics.Debug.WriteLine(value);
-                //listeningPort = value;
                 OnPropertyChanged("ListeningPort");
             }
         }
 
         private string search;
-
         public string Search
         {
             get { return search; }
@@ -152,7 +148,6 @@ namespace TDDD49.ViewModels
                 OnPropertyChanged("Search");
             }
         }
-
 
         private String msgTxt;
         public String MsgTxt
@@ -164,9 +159,16 @@ namespace TDDD49.ViewModels
             }
         }
 
-
         private ObservableCollection<Message> messageList;
-        public ObservableCollection<Message> MessageList { get; set; }
+        public ObservableCollection<Message> MessageList
+        {
+            get { return messageList; }
+            set
+            {
+                messageList = value;
+                OnPropertyChanged();
+            }
+        }
         private ObservableCollection<Conversation> convoHistory;
         public ObservableCollection<Conversation> ConvoHistory { 
             get { return convoHistory; } 
@@ -204,17 +206,14 @@ namespace TDDD49.ViewModels
             this.ShowConnectionStatusMsg = "No connection";
             this.ShowPanel = false;
 
-            this.connections = new Connections(this);
-            this.connections.PropertyChanged += connections_PropertyChanged;
+            this.Connections = new Connections();
+            this.Connections.PropertyChanged += connections_PropertyChanged;
 
             this.MessageList = new ObservableCollection<Message>();
 
-            
-            this.fileWriter = new FileWriter();
+            this.FileWriter = new FileWriter();
 
-            this.ConvoHistory = new ObservableCollection<Conversation>(fileWriter.GetHistory());
-  
-
+            this.ConvoHistory = new ObservableCollection<Conversation>(FileWriter.GetHistory());
 
             this.ClientFetchCommand = new ClientFetchCommand(this);
             this.ClientListenCommand = new ClientListenCommand(this);
@@ -237,26 +236,26 @@ namespace TDDD49.ViewModels
             }
             if(e.PropertyName == "Connected")
             {
-                Debug.WriteLine("connected is " + connections.Connected);
                 CheckIfClearListChat(connections.Connected);
                 UpdateConnectedStatus(connections.Connected);
                 ShowPanel = connections.Connected;
             }
             if(e.PropertyName == "Buzzed")
             {
-                Debug.WriteLine("Should now buzz");
                 Buzz();
             }
             if(e.PropertyName == "ConnectedToUser")
             {
                 InitConvo(connections.ConnectedToUser);
             }
+            if(e.PropertyName == "FoundConnection")
+            {
+                PopUpActive = connections.FoundConnection;
+            }
         }
 
         public void ClientFetchMethod()
         {
-            Debug.WriteLine(Port.ToString());  
-            Debug.WriteLine(Port.GetType().ToString());
             if (Name != null && Name != string.Empty &&
                 Ip != null && Ip != string.Empty &&
                 Port.ToString() != null && Port.ToString() != string.Empty)
@@ -281,6 +280,7 @@ namespace TDDD49.ViewModels
                 try
                 {
                     connections.ListeningTaskMethod(Int32.Parse(ListeningPort));
+                   
                 }
                 catch (Exception ex)
                 {
@@ -294,7 +294,7 @@ namespace TDDD49.ViewModels
         {
             
             PopUpActive = false;
-            connections.AcceptConnection(modelClient.Name);
+            connections.AcceptConnection(Name);
  
         }
 
@@ -347,7 +347,6 @@ namespace TDDD49.ViewModels
 
         private void UpdateConnectedStatus(bool connected)
         {
-            Debug.WriteLine("Now running updating connected");
             if(connected)
             {
                 ShowConnectionStatusMsg = "Connected";
@@ -368,7 +367,6 @@ namespace TDDD49.ViewModels
         {
             if (!connections.Connected)
             {
-                Debug.WriteLine("Should update chat right now");
                 MessageList.Clear();
                 aList.ToList().ForEach(a => MessageList.Add(a)); ;
             }
@@ -376,24 +374,12 @@ namespace TDDD49.ViewModels
 
         private void FilterSearch()
         {
-            Debug.WriteLine("Enter filter search");
-            //funktionalitet för att visa convoHistory
-            //ConvoHistory = new ObservableCollection<Conversation>(fileWriter.GetHistory());
-
             var myRegex = new Regex("^" + Search);
-            //IEnumerable<Conversation> conversations = fileWriter.GetHistory()
-
             IEnumerable <Conversation> conversations = from conversation in fileWriter.GetHistory()
                                                       where myRegex.IsMatch(conversation.Name)
                                                       select conversation;
-
-            Debug.WriteLine(conversations.ToList().ToString());
             
             ConvoHistory = new ObservableCollection<Conversation>(conversations);
-
-            //ConvoHistory.Clear();
-            //conversations.ToList().ForEach(conversation => ConvoHistory.Add(conversation)); 
-            //CollectionViewSource.GetDefaultView(ConvoHistory).Refresh();
         }
 
         public void BuzzMethod()

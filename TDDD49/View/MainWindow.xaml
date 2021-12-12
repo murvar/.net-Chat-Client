@@ -11,8 +11,8 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="6*"/>
-            <ColumnDefinition Width="8*"/>
-            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="9*"/>
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -59,7 +59,7 @@
             <Popup IsOpen = "{Binding Path=PopUpActive, Source={StaticResource vmc}, Mode=TwoWay}"   
                    PlacementTarget = "{Binding ElementName = btnListen}" 
                    Visibility="{Binding PopUpActive, Source={StaticResource vmc}, Converter={StaticResource TrueToVisibleConverter}, Mode=TwoWay}"
-                    >
+                    AllowsTransparency="True">
 
 
                 <Grid Margin="10">
@@ -135,19 +135,25 @@
 
             </ListView>
 
-
             <TextBox x:Name="MsgBox"
                      Text="{Binding Path=MsgTxt}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <Button x:Name="SendMsg" 
+                <Button x:Name="SendMsg" 
                     Margin="0,5,0,0" 
-                    Command="{Binding SendMessageCommand, Source={StaticResource vmc}}">Send Message</Button>
+                    Command="{Binding SendMessageCommand, Source={StaticResource vmc}}"
+                    Grid.Column="0">Send Message</Button>
 
             <Button x:Name="SendBuzz" 
                     Margin="0,5,0,0" 
-                    Command="{Binding BuzzCommand, Source={StaticResource vmc}}">Buzz</Button>
+                    Command="{Binding BuzzCommand, Source={StaticResource vmc}}"
+                    Grid.Column="1">Buzz</Button>
 
-
+            </Grid>
 
         </StackPanel>
         <Grid Grid.Row="2" Grid.Column="2" Margin="5,0,0,0"

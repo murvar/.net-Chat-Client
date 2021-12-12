@@ -1,25 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using TDDD49.ViewModels;
 using TDDD49.Model;
 using System.Diagnostics;
 using System.Net.Sockets;
 using System.Net;
-using System.Threading;
-using System.Windows;
 using System.ComponentModel;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 
 namespace TDDD49.ViewModel.Tasks
 {
-    internal class Connections : INotifyPropertyChanged
+    public class Connections : INotifyPropertyChanged
     {
-        public ViewModelClient Vmc { get; set; }
-
         private TcpListener server;
         public TcpListener Server
         {
@@ -45,15 +37,10 @@ namespace TDDD49.ViewModel.Tasks
             get { return connectedToUser; }
             set
             {
-
                 connectedToUser = value;
                 OnPropertyChanged("ConnectedToUser");
-
             }
         }
-
-
-        public static List<TcpClient> client = new List<TcpClient>();
 
         private Message recievedMessage;
         public Message RecievedMessage
@@ -80,6 +67,20 @@ namespace TDDD49.ViewModel.Tasks
             }
         }
 
+        private bool foundConnection;
+
+        public bool FoundConnection
+        {
+            get { return foundConnection; }
+            set { 
+                foundConnection = value; 
+                OnPropertyChanged("FoundConnection");
+
+            }
+        }
+
+
+        public static List<TcpClient> client = new List<TcpClient>();
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
@@ -91,15 +92,13 @@ namespace TDDD49.ViewModel.Tasks
         }
 
 
-        public Connections(ViewModelClient vmc)
+        public Connections()
         {
-            this.Vmc = vmc;
-            //this.client = new List<TcpClient>();
         }
 
         public void ConnectTaskMethod(string name, string ip, int port)
         {
-            Task.Factory.StartNew(async () =>
+            Task.Factory.StartNew(() =>
             {
                 try
                 {
@@ -143,7 +142,7 @@ namespace TDDD49.ViewModel.Tasks
                     var something = await Server.AcceptTcpClientAsync();
 
                     client.Add(something);
-                    Vmc.PopUpActive = true;
+                    FoundConnection = true;
 
                 }
                 catch (SocketException e)
@@ -152,6 +151,7 @@ namespace TDDD49.ViewModel.Tasks
                 }
                 finally
                 {
+
                     server.Stop();
                 }
 
@@ -199,7 +199,6 @@ namespace TDDD49.ViewModel.Tasks
 
         private void ListenForMessage()
         {
-            //finns tom konversation? Nej -> skapa ny tom
 
             Task.Factory.StartNew(async () =>
             {
@@ -208,18 +207,12 @@ namespace TDDD49.ViewModel.Tasks
 
                     Byte[] data = new Byte[256];
                     NetworkStream stream = client[0].GetStream();
-                    // String to store the response ASCII representation.
                     String responseData = String.Empty;
 
-                    // Read the first batch of the TcpServer response bytes.
                     Int32 bytes = await stream.ReadAsync(data, 0, data.Length);
                     responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                    Debug.WriteLine("Will now update REcVMESSAGE");
                     if(responseData != String.Empty)
                     {
-                        Debug.WriteLine(responseData);
-                        Debug.WriteLine("Debug 1");
-                        //JObject o = JObject.Parse(responseData);
                         JObject o = JObject.Parse(responseData);
                         if (o.ContainsKey("handshake"))
                         {
@@ -230,21 +223,17 @@ namespace TDDD49.ViewModel.Tasks
 
                             Buzzed = true;
                         }
-                        else
-                        {
-                            Debug.WriteLine("Debug 2");
+                        else {
                             RecievedMessage = new Message((string)o["sender"], (string)o["time"], (string)o["msg"]);
-                            Debug.WriteLine("Debug 3");
                         }
 
                         stream.Flush();
-                    } else
-                    {
+                    } 
+                    else {
                         App.Current.Dispatcher.Invoke((System.Action)delegate
                         {
                             CloseClient();
                         });
-                        
                         break;
                     }
                 }
@@ -253,7 +242,7 @@ namespace TDDD49.ViewModel.Tasks
 
         public void AcceptConnection(String name)
         {
-            Task.Factory.StartNew(async () =>
+            Task.Factory.StartNew(() =>
             {
 
                 try
@@ -262,11 +251,12 @@ namespace TDDD49.ViewModel.Tasks
                 } 
                 catch (Exception e)
                 {
-                    Debug.WriteLine(e);
+                    //Debug.WriteLine(e);
                 }
                 finally
                 {
                     Connected = true;
+                    FoundConnection = false;
                 }
                
             });
@@ -281,6 +271,7 @@ namespace TDDD49.ViewModel.Tasks
 
         public void DenyConnection()
         {
+            FoundConnection = false;
             CloseClient();
         }
 

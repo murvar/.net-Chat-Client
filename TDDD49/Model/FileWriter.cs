@@ -2,11 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TDDD49.Model
 {
@@ -26,14 +22,14 @@ namespace TDDD49.Model
 
             if (File.ReadAllText(@"c:\TDDD49STORAGE\conversations.json") == String.Empty)
             {
-                Debug.WriteLine("created conversations object");
+                //Debug.WriteLine("created conversations object");
                 conversations = new JObject(
                     new JProperty("conversations", new JArray()));
             }
             else
             {
                 conversations = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(@"c:\TDDD49STORAGE\conversations.json"));
-                Debug.WriteLine(conversations.ToString());
+                //Debug.WriteLine(conversations.ToString());
             }
         }
 
@@ -45,7 +41,7 @@ namespace TDDD49.Model
             JArray aConvo = (JArray)conversation["convo"];        
             aConvo.Add(jsonObj);
 
-            Debug.WriteLine(conversations.ToString());
+            //Debug.WriteLine(conversations.ToString());
 
             File.WriteAllText(@"c:\TDDD49STORAGE\conversations.json", conversations.ToString());
 
@@ -53,7 +49,7 @@ namespace TDDD49.Model
         
         public void InitConversation(String name)
         {
-            Debug.WriteLine("Initialised conversations with name " + name);
+            //Debug.WriteLine("Initialised conversations with name " + name);
             JArray arrayOfConvos = (JArray)conversations["conversations"];
             arrayOfConvos.Add(new JObject(
                 new JProperty("name", name),
@@ -65,7 +61,7 @@ namespace TDDD49.Model
             //gå igenom alla objekt i conversations JArray
             //konverta till conversations-objekt och lägg till i lista
             //retunerna lista
-            Debug.WriteLine("Entering getHistory");
+            //Debug.WriteLine("Entering getHistory");
             List<Conversation> aList = new List<Conversation>();
 
             foreach (JObject value in conversations["conversations"])
