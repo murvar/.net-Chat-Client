@@ -97,23 +97,15 @@ namespace TDDD49.ViewModel.Tasks
             //this.client = new List<TcpClient>();
         }
 
-        public void ConnectTaskMethod(ModelClient modelClient)
+        public void ConnectTaskMethod(string name, string ip, int port)
         {
             Task.Factory.StartNew(async () =>
             {
                 try
                 {
-                    Vmc.InformativeConnectBoxActive = false;
-
-                    String server = modelClient.Ip;
-                    int port = modelClient.Port;
-
-                    //IMPLEMENTERA DEFENSIV PROGRAMMERING HÄR
-
-                    var something = new TcpClient(server, port);
+                    var something = new TcpClient(ip, port);
                     client.Add(something);
-                    HandShake(modelClient.Name);
-
+                    HandShake(name);
 
                 }
                 catch (InvalidOperationException e)
@@ -126,8 +118,6 @@ namespace TDDD49.ViewModel.Tasks
                 }
                 catch (SocketException e)
                 {
-                    //visa fönser med felmeddelande
-                    //Vmc.InformativeConnectBoxActive = true;
                     Debug.WriteLine("SocketException: {0}", e);
                 }
                 finally

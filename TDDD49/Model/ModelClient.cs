@@ -31,8 +31,8 @@ namespace TDDD49.Model
             }
         }
 
-        private int port;
-        public int Port
+        private string port;
+        public string Port
         {
             get { return port; }
             set 
@@ -43,9 +43,9 @@ namespace TDDD49.Model
             }
         }
 
-        private int listeningPort;
+        private string listeningPort;
 
-        public int ListeningPort
+        public string ListeningPort
         {
             get { return listeningPort; }
             set

@@ -38,6 +38,18 @@ namespace TDDD49.ViewModels
 
         private FileWriter fileWriter;
 
+        private bool showPanel;
+
+        public bool ShowPanel
+        {
+            get { return showPanel; }
+            set { 
+                showPanel = value;
+                OnPropertyChanged("ShowPanel");
+            }
+        }
+
+
         private bool popUpActive;
         public bool PopUpActive
         {
@@ -107,7 +119,7 @@ namespace TDDD49.ViewModels
             }
         }
 
-        public int Port
+        public String Port
         {
             get { return modelClient.Port; }
             set
@@ -118,7 +130,7 @@ namespace TDDD49.ViewModels
             }
         }
 
-        public int ListeningPort
+        public string ListeningPort
         {
             get { return modelClient.ListeningPort; }
             set
@@ -184,12 +196,13 @@ namespace TDDD49.ViewModels
         {
             modelClient = new ModelClient();
             modelClient.Ip = "127.0.0.1";
-            modelClient.Port = 5001;
+            modelClient.Port = "5555";
             modelClient.Name = "Robin";
-            modelClient.ListeningPort = 5001;
+            modelClient.ListeningPort = "5001";
             this.InformativeConnectBoxActive = false;
             this.PopUpActive = false;
             this.ShowConnectionStatusMsg = "No connection";
+            this.ShowPanel = false;
 
             this.connections = new Connections(this);
             this.connections.PropertyChanged += connections_PropertyChanged;
@@ -224,8 +237,10 @@ namespace TDDD49.ViewModels
             }
             if(e.PropertyName == "Connected")
             {
+                Debug.WriteLine("connected is " + connections.Connected);
                 CheckIfClearListChat(connections.Connected);
                 UpdateConnectedStatus(connections.Connected);
+                ShowPanel = connections.Connected;
             }
             if(e.PropertyName == "Buzzed")
             {
@@ -240,13 +255,39 @@ namespace TDDD49.ViewModels
 
         public void ClientFetchMethod()
         {
-            connections.ConnectTaskMethod(modelClient);
- 
+            Debug.WriteLine(Port.ToString());  
+            Debug.WriteLine(Port.GetType().ToString());
+            if (Name != null && Name != string.Empty &&
+                Ip != null && Ip != string.Empty &&
+                Port.ToString() != null && Port.ToString() != string.Empty)
+            {
+                try
+                {
+                    connections.ConnectTaskMethod(Name, Ip, Int32.Parse(Port));
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+                
+            }
         }
 
         public void ClientListenMethod()
         {
-            connections.ListeningTaskMethod(ListeningPort);
+            if (Name != null && Name != string.Empty &&
+                ListeningPort != null && ListeningPort != string.Empty)
+            {
+                try
+                {
+                    connections.ListeningTaskMethod(Int32.Parse(ListeningPort));
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+                
+            }
         }
 
         public void AcceptConnectionMethod()
@@ -270,10 +311,13 @@ namespace TDDD49.ViewModels
 
         public void SendMessageMethod()
         {
-            Message msg = new Message(Name, DateTime.Now.ToString(), MsgTxt);
-            WriteMessageLocal(msg);
-            connections.SendMessage(msg);
-            MsgTxt = "";
+            if (MsgTxt != null && MsgTxt != string.Empty)
+            {
+                Message msg = new Message(Name, DateTime.Now.ToString(), MsgTxt);
+                WriteMessageLocal(msg);
+                connections.SendMessage(msg);
+                MsgTxt = "";
+            }
         }
 
         private void AddMessage()
