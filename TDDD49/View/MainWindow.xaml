@@ -11,8 +11,8 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="6*"/>
-            <ColumnDefinition Width="10*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="8*"/>
+            <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -44,7 +44,6 @@
                     Command="{Binding ClientFetchCommand, Source={StaticResource vmc}}">Initiate Chat</Button>
 
             <Label Grid.Row="0" Grid.Column="0" Visibility="{Binding Path=InformativeConnectBoxActive, Converter={StaticResource TrueToVisibleConverter}}">No connection was found!</Label>
-
 
 
 
@@ -151,10 +150,10 @@
 
 
         </StackPanel>
-        <StackPanel Grid.Row="2" Grid.Column="2" Margin="5,0,0,0"
+        <Grid Grid.Row="2" Grid.Column="2" Margin="5,0,0,0"
                     DataContext="{Binding Source={StaticResource vmc}}">
 
-             <Label>Search:</Label>
+            <Label>Search:</Label>
             <TextBox x:Name="filter"
                      Text="{Binding Path=Search}"/>
 
@@ -162,12 +161,12 @@
             <ListView DataContext="{Binding ConvoHistory}" ItemsSource="{Binding}"
                   ScrollViewer.VerticalScrollBarVisibility="Visible"
                   ScrollViewer.CanContentScroll="False"
-                  Height="200">
+                  Height="Auto">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="Black" BorderThickness="2" CornerRadius="10">
                             <Grid Width="100"
-                            Height="20" Background="Aqua">
+                            Height="40" Background="Aqua">
 
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
@@ -176,12 +175,14 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
 
-                                <TextBlock Grid.Row="0" Text="{Binding Name}" VerticalAlignment="Center" Margin="20 0">
-                            <Button x:Name="ShowOldConvo" 
+                                <Button x:Name="ShowOldConvo" 
                                 Margin="0,5,0,0" 
                                 Command="{Binding ShowOldConversationCommand, Source={StaticResource vmc}}"
-                                CommandParameter="{Binding ListOfMessages}">Load</Button>
-                                </TextBlock>
+                                CommandParameter="{Binding ListOfMessages}" Background="Transparent" >
+
+                                    <TextBlock Text="{Binding Name}"  Background="Transparent"></TextBlock>
+                                </Button>
+                                
                             </Grid>
                         </Border>
                     </DataTemplate>
@@ -189,7 +190,7 @@
 
             </ListView>
 
-        </StackPanel>
+        </Grid>
 
     </Grid>
 

@@ -311,7 +311,7 @@ namespace TDDD49.ViewModels
 
         public void SendMessageMethod()
         {
-            if (MsgTxt != null && MsgTxt != string.Empty)
+            if (MsgTxt != null && MsgTxt != string.Empty && connections.Connected)
             {
                 Message msg = new Message(Name, DateTime.Now.ToString(), MsgTxt);
                 WriteMessageLocal(msg);
