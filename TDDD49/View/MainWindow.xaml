@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TDDD49"
         xmlns:vm="clr-namespace:TDDD49.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="461" Width="920">
     <Grid Margin="10">
 
         <Grid.ColumnDefinitions>
@@ -21,11 +21,8 @@
         <Grid.Resources>
             <vm:ViewModelClient x:Key="vmc"/>
             <BooleanToVisibilityConverter x:Key="TrueToVisibleConverter"/>
-            
-        </Grid.Resources>
 
-        <Label>Contacts</Label>
-        <ListBox Grid.Row="1" x:Name="lstNames" />
+        </Grid.Resources>
 
         <StackPanel Grid.Row="1" Grid.Column="0" Margin="5,0,5,0"
                     DataContext="{Binding Source={StaticResource vmc}}">
@@ -37,19 +34,19 @@
             <Label>IP-Adress:</Label>
             <TextBox x:Name="txtIP"
                      Text="{Binding Path=Ip}"/>
-            
+
             <Label>Port:</Label>
             <TextBox x:Name="txtPort"
                      Text="{Binding Path=Port}"/>
-            
+
             <Button x:Name="btnAdd" 
                     Margin="0,5,0,0" 
                     Command="{Binding ClientFetchCommand, Source={StaticResource vmc}}">Initiate Chat</Button>
 
             <Label Grid.Row="0" Grid.Column="0" Visibility="{Binding Path=InformativeConnectBoxActive, Converter={StaticResource TrueToVisibleConverter}}">No connection was found!</Label>
 
-         
- 
+
+
 
             <Label>Listening Port:</Label>
             <TextBox x:Name="listenPort" 
@@ -59,12 +56,12 @@
                     Margin="0,5,0,0" 
                     Command="{Binding ClientListenCommand, Source={StaticResource vmc}}">Start listening</Button>
 
-    
+
             <Popup IsOpen = "{Binding Path=PopUpActive, Source={StaticResource vmc}, Mode=TwoWay}"   
                    PlacementTarget = "{Binding ElementName = btnListen}" 
                    Visibility="{Binding PopUpActive, Source={StaticResource vmc}, Converter={StaticResource TrueToVisibleConverter}, Mode=TwoWay}"
                     >
-            
+
 
                 <Grid Margin="10">
 
@@ -97,52 +94,52 @@
 
 
         </StackPanel>
-        
+
         <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,0,0"
                     DataContext="{Binding Source={StaticResource vmc}}">
-        
-        <Label Grid.Column="1" Content="{Binding Path=ShowConnectionStatusMsg, Mode=TwoWay}"></Label>
 
-        <Button x:Name="endConnection" 
+            <Label Grid.Column="1" Content="{Binding Path=ShowConnectionStatusMsg, Mode=TwoWay}"></Label>
+
+            <Button x:Name="endConnection" 
                     Margin="0,5,0,0" 
                     Command="{Binding DisconnectConnectionCommand}">Terminate Connection</Button>
 
-        <ListView DataContext="{Binding MessageList}" ItemsSource="{Binding}"
+            <ListView DataContext="{Binding MessageList}" ItemsSource="{Binding}"
                   ScrollViewer.VerticalScrollBarVisibility="Visible"
                   ScrollViewer.CanContentScroll="False"
                   Height="200">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                    <Border BorderBrush="Black" BorderThickness="2" CornerRadius="10">
-                        <Grid Width="400"
+                        <Border BorderBrush="Black" BorderThickness="2" CornerRadius="10">
+                            <Grid Width="400"
                             Height="50" Background="Aqua">
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0" Text="{Binding Sender}" VerticalAlignment="Center" Margin="20 0">
-                            </TextBlock>
-                            <TextBlock Grid.Row="1" Text="{Binding Time}" VerticalAlignment="Center" Margin="20 0">
-                            </TextBlock>
-                            <TextBlock Grid.Row="2" Text="{Binding Msg}" VerticalAlignment="Center" Margin="20 0">
-                            </TextBlock>
-                        </Grid>
+                                <TextBlock Grid.Row="0" Text="{Binding Sender}" VerticalAlignment="Center" Margin="20 0">
+                                </TextBlock>
+                                <TextBlock Grid.Row="1" Text="{Binding Time}" VerticalAlignment="Center" Margin="20 0">
+                                </TextBlock>
+                                <TextBlock Grid.Row="2" Text="{Binding Msg}" VerticalAlignment="Center" Margin="20 0">
+                                </TextBlock>
+                            </Grid>
                         </Border>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-            
+
             </ListView>
 
 
-         <TextBox x:Name="MsgBox"
+            <TextBox x:Name="MsgBox"
                      Text="{Binding Path=MsgTxt}"/>
-            
+
             <Button x:Name="SendMsg" 
                     Margin="0,5,0,0" 
                     Command="{Binding SendMessageCommand, Source={StaticResource vmc}}">Send Message</Button>
@@ -153,34 +150,39 @@
         <StackPanel Grid.Row="2" Grid.Column="2" Margin="5,0,0,0"
                     DataContext="{Binding Source={StaticResource vmc}}">
 
-             <ListView DataContext="{Binding ConvoHistory}" ItemsSource="{Binding}"
+             <Label>Search:</Label>
+            <TextBox x:Name="filter"
+                     Text="{Binding Path=Search}"/>
+
+
+            <ListView DataContext="{Binding ConvoHistory}" ItemsSource="{Binding}"
                   ScrollViewer.VerticalScrollBarVisibility="Visible"
                   ScrollViewer.CanContentScroll="False"
                   Height="200">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                    <Border BorderBrush="Black" BorderThickness="2" CornerRadius="10">
-                        <Grid Width="100"
+                        <Border BorderBrush="Black" BorderThickness="2" CornerRadius="10">
+                            <Grid Width="100"
                             Height="20" Background="Aqua">
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0" Text="{Binding Name}" VerticalAlignment="Center" Margin="20 0">
+                                <TextBlock Grid.Row="0" Text="{Binding Name}" VerticalAlignment="Center" Margin="20 0">
                             <Button x:Name="ShowOldConvo" 
                                 Margin="0,5,0,0" 
                                 Command="{Binding ShowOldConversationCommand, Source={StaticResource vmc}}"
                                 CommandParameter="{Binding ListOfMessages}">Load</Button>
-                            </TextBlock>
-                        </Grid>
+                                </TextBlock>
+                            </Grid>
                         </Border>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-            
+
             </ListView>
 
         </StackPanel>

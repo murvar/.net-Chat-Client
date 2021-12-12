@@ -13,6 +13,9 @@ using System.Net;
 using System.IO;
 using System.Windows;
 using System.Collections.ObjectModel;
+using System.Windows.Data;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 namespace TDDD49.ViewModels
 {
@@ -126,6 +129,18 @@ namespace TDDD49.ViewModels
             }
         }
 
+        private string search;
+
+        public string Search
+        {
+            get { return search; }
+            set { 
+                search = value;
+                OnPropertyChanged("Search");
+            }
+        }
+
+
         private String msgTxt;
         public String MsgTxt
         {
@@ -142,15 +157,22 @@ namespace TDDD49.ViewModels
         private ObservableCollection<Conversation> convoHistory;
         public ObservableCollection<Conversation> ConvoHistory { 
             get { return convoHistory; } 
-            set { convoHistory = value; }
+            set { 
+                convoHistory = value;
+                OnPropertyChanged();
+            }
         }
 
 
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected void OnPropertyChanged(string propertyName)
+        protected void OnPropertyChanged([CallerMemberName]string propertyName = "")
         {
+            if(propertyName == "Search")
+            {
+                FilterSearch();
+            }
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
@@ -299,6 +321,28 @@ namespace TDDD49.ViewModels
                 MessageList.Clear();
                 aList.ToList().ForEach(a => MessageList.Add(a)); ;
             }
+        }
+
+        private void FilterSearch()
+        {
+            Debug.WriteLine("Enter filter search");
+            //funktionalitet för att visa convoHistory
+            //ConvoHistory = new ObservableCollection<Conversation>(fileWriter.GetHistory());
+
+            var myRegex = new Regex("^" + Search);
+            //IEnumerable<Conversation> conversations = fileWriter.GetHistory()
+
+            IEnumerable <Conversation> conversations = from conversation in fileWriter.GetHistory()
+                                                      where myRegex.IsMatch(conversation.Name)
+                                                      select conversation;
+
+            Debug.WriteLine(conversations.ToList().ToString());
+            
+            ConvoHistory = new ObservableCollection<Conversation>(conversations);
+
+            //ConvoHistory.Clear();
+            //conversations.ToList().ForEach(conversation => ConvoHistory.Add(conversation)); 
+            //CollectionViewSource.GetDefaultView(ConvoHistory).Refresh();
         }
     }
 }
