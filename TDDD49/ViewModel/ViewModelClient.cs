@@ -236,9 +236,9 @@ namespace TDDD49.ViewModels
             }
             if(e.PropertyName == "Connected")
             {
-                CheckIfClearListChat(connections.Connected);
-                UpdateConnectedStatus(connections.Connected);
-                ShowPanel = connections.Connected;
+                CheckIfClearListChat(Connections.Connected);
+                UpdateConnectedStatus(Connections.Connected);
+                ShowPanel = Connections.Connected;
             }
             if(e.PropertyName == "Buzzed")
             {
@@ -246,11 +246,11 @@ namespace TDDD49.ViewModels
             }
             if(e.PropertyName == "ConnectedToUser")
             {
-                InitConvo(connections.ConnectedToUser);
+                InitConvo(Connections.ConnectedToUser);
             }
             if(e.PropertyName == "FoundConnection")
             {
-                PopUpActive = connections.FoundConnection;
+                PopUpActive = Connections.FoundConnection;
             }
         }
 
@@ -347,6 +347,7 @@ namespace TDDD49.ViewModels
 
         private void UpdateConnectedStatus(bool connected)
         {
+            Debug.WriteLine("In update status with connected as " + connected);
             if(connected)
             {
                 ShowConnectionStatusMsg = "Connected";

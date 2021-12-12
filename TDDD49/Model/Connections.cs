@@ -105,6 +105,7 @@ namespace TDDD49.ViewModel.Tasks
                     var something = new TcpClient(ip, port);
                     client.Add(something);
                     HandShake(name);
+                    Debug.WriteLine("Pritn after handshake");
 
                 }
                 catch (InvalidOperationException e)
@@ -121,6 +122,8 @@ namespace TDDD49.ViewModel.Tasks
                 }
                 finally
                 {
+                    Debug.WriteLine("This runs now");
+                    Debug.WriteLine(client.Count.ToString());
                     Connected = true;
                     ListenForMessage();
                 }
@@ -199,7 +202,7 @@ namespace TDDD49.ViewModel.Tasks
 
         private void ListenForMessage()
         {
-
+            Debug.WriteLine("This runs now 2");
             Task.Factory.StartNew(async () =>
             {
                 while (true)
@@ -230,8 +233,10 @@ namespace TDDD49.ViewModel.Tasks
                         stream.Flush();
                     } 
                     else {
+                        Debug.WriteLine("This runs now 2");
                         App.Current.Dispatcher.Invoke((System.Action)delegate
                         {
+                            Debug.WriteLine("This runs from listening for message");
                             CloseClient();
                         });
                         break;
@@ -277,6 +282,8 @@ namespace TDDD49.ViewModel.Tasks
 
         private void CloseClient()
         {
+            Debug.WriteLine("client should now close");
+            
             Connected = false;
             client[0].Close();
             client.RemoveAt(0);
