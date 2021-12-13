@@ -67,6 +67,21 @@ namespace TDDD49.ViewModel.Tasks
             }
         }
 
+        private bool infoNoConnection;
+        public bool InfoNoConnection
+        {
+            get { return infoNoConnection; }
+            set
+            {
+                infoNoConnection = value;
+                if (value == true)
+                {
+                    InfoNoConnection = false;
+                    OnPropertyChanged("InfoNoConnection");
+                }
+            }
+        }
+
         private bool foundConnection;
 
         public bool FoundConnection
@@ -119,6 +134,9 @@ namespace TDDD49.ViewModel.Tasks
                 catch (SocketException e)
                 {
                     Debug.WriteLine("SocketException: {0}", e);
+                    //Informative chat box
+                    InfoNoConnection = true;
+
                 }
                 finally
                 {

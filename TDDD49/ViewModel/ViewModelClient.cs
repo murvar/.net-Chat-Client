@@ -252,6 +252,10 @@ namespace TDDD49.ViewModels
             {
                 PopUpActive = Connections.FoundConnection;
             }
+            if(e.PropertyName == "InfoNoConnection")
+            {
+                InformativeConnectBoxActive = true;
+            }
         }
 
         public void ClientFetchMethod()
@@ -262,6 +266,8 @@ namespace TDDD49.ViewModels
             {
                 try
                 {
+                    InformativeConnectBoxActive = false;
+                    CheckIfClearListChat(connections.Connected);
                     connections.ConnectTaskMethod(Name, Ip, Int32.Parse(Port));
                 }
                 catch (Exception ex)
@@ -279,6 +285,8 @@ namespace TDDD49.ViewModels
             {
                 try
                 {
+                    CheckIfClearListChat(connections.Connected);
+                    InformativeConnectBoxActive=false;
                     connections.ListeningTaskMethod(Int32.Parse(ListeningPort));
                    
                 }
