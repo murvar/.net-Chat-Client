@@ -104,7 +104,7 @@ namespace TDDD49.ViewModel.Tasks
                 {
                     var something = new TcpClient(ip, port);
                     client.Add(something);
-                    HandShake(name);
+                    //HandShake(name);
                     Debug.WriteLine("Pritn after handshake");
 
                 }
@@ -252,7 +252,7 @@ namespace TDDD49.ViewModel.Tasks
 
                 try
                 {
-                    HandShake(name);
+                    //HandShake(name);
                 } 
                 catch (Exception e)
                 {
