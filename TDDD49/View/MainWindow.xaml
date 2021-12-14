@@ -158,16 +158,28 @@
         </StackPanel>
         <Grid Grid.Row="2" Grid.Column="2" Margin="5,0,0,0"
                     DataContext="{Binding Source={StaticResource vmc}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-            <Label>Search:</Label>
+            <Label Grid.Column="0"
+                   Grid.Row="0">Search:</Label>
             <TextBox x:Name="filter"
-                     Text="{Binding Path=Search}"/>
+                     Text="{Binding Path=Search}"
+                     Grid.Row="1"
+                     Grid.Column="0"/>
 
 
             <ListView DataContext="{Binding ConvoHistory}" ItemsSource="{Binding}"
                   ScrollViewer.VerticalScrollBarVisibility="Visible"
                   ScrollViewer.CanContentScroll="False"
-                  Height="Auto">
+                  Height="Auto"
+                    Grid.Row="2">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="Black" BorderThickness="2" CornerRadius="10">
@@ -184,9 +196,9 @@
                                 <Button x:Name="ShowOldConvo" 
                                 Margin="0,5,0,0" 
                                 Command="{Binding ShowOldConversationCommand, Source={StaticResource vmc}}"
-                                CommandParameter="{Binding ListOfMessages}" Background="Transparent" >
+                                CommandParameter="{Binding ListOfMessages}" Background="Transparent">
 
-                                    <TextBlock Text="{Binding Name}"  Background="Transparent"></TextBlock>
+                                    <TextBlock Text="{Binding Name}"  Background="Transparent" Width="Auto"></TextBlock>
                                 </Button>
                                 
                             </Grid>

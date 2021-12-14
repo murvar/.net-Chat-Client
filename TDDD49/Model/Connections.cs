@@ -207,15 +207,20 @@ namespace TDDD49.ViewModel.Tasks
             Send(jsonObj);
         }
 
+        //Tråd
         public void Send(JObject dataAsJson)
         {
-            String dataToSend = dataAsJson.ToString();
+            Task.Factory.StartNew(() =>
+            {
+                String dataToSend = dataAsJson.ToString();
 
-            Byte[] data = System.Text.Encoding.ASCII.GetBytes(dataToSend);
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(dataToSend);
 
-            NetworkStream stream = client[0].GetStream();
+                NetworkStream stream = client[0].GetStream();
 
-            stream.Write(data, 0, data.Length);
+                stream.Write(data, 0, data.Length);
+            });
+
         }
 
         private void ListenForMessage()
