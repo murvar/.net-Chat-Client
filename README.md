@@ -4,5 +4,5 @@ ska göra det möjligt för två användare att kunna chatta med varandra. Anvä
 skicka chattinbjudan och vänta på att andra parten accepterar den. Sedan kan båda användare
 skicka textmeddelanden till varandra. Hela kommunikationen ska vara baserad på
 portnummer och ip-adress. Användare ska INTE behöva skapa något konto och chat-appen ska
-vara serverlös
+vara serverlös..
 
